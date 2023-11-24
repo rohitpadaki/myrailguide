@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+FirebaseFirestore firestore = FirebaseFirestore.instance;
 
 class FeedbackComp extends StatefulWidget {
   const FeedbackComp({super.key});
@@ -10,6 +13,14 @@ class FeedbackComp extends StatefulWidget {
 class _FeedbackCompState extends State<FeedbackComp> {
   @override
   Widget build(BuildContext context) {
+    TextEditingController fbcontroller = TextEditingController();
+    Future<void> submitFeedback(fbcoll, fbstring) {
+      return fbcoll
+          .add({'feedback': fbstring})
+          .then((value) => print("Feedback Added"))
+          .catchError((error) => print("Failed to add FB"));
+    }
+
     const Color bgcolor = Color(0xFFF5F5F5);
     const Color thcolor = Color(0xFF225FDE);
     return SafeArea(
@@ -83,6 +94,7 @@ class _FeedbackCompState extends State<FeedbackComp> {
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10),
                       child: TextField(
+                        controller: fbcontroller,
                         cursorColor: Colors.black,
                         maxLength: 150,
                         decoration: InputDecoration(
@@ -108,7 +120,12 @@ class _FeedbackCompState extends State<FeedbackComp> {
                       padding: const EdgeInsets.symmetric(vertical: 5.0),
                       child: MaterialButton(
                         minWidth: double.infinity,
-                        onPressed: () {},
+                        onPressed: () {
+                          CollectionReference fbcoll =
+                              firestore.collection('feedback');
+                          submitFeedback(fbcoll, fbcontroller.text);
+                          Navigator.pop(context);
+                        },
                         elevation: 0,
                         color: thcolor,
                         shape: RoundedRectangleBorder(

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:myrailguide/loading.dart';
-import 'dart:async';
 
 class TrainResult extends StatefulWidget {
   const TrainResult({super.key});
@@ -10,8 +9,8 @@ class TrainResult extends StatefulWidget {
 }
 
 class _TrainResultState extends State<TrainResult> {
-  @override
   bool status = true;
+  @override
   Widget build(BuildContext context) {
     const Color bgcolor = Color(0xFFF5F5F5);
 

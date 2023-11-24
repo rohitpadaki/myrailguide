@@ -1,0 +1,67 @@
+{
+  "project_info": {
+    "project_number": "1049808798924",
+    "project_id": "myrailguide-6fd35",
+    "storage_bucket": "myrailguide-6fd35.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1049808798924:android:9eab15a5d8d096910dee69",
+        "android_client_info": {
+          "package_name": "com.example.myrailguide"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCpcLM01GAySMwmU9w_efyj8lNEy0qMPSk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1049808798924:android:bf8e6717bf4a22430dee69",
+        "android_client_info": {
+          "package_name": "com.example.rail"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCpcLM01GAySMwmU9w_efyj8lNEy0qMPSk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1049808798924:android:927e0dda47f13a1a0dee69",
+        "android_client_info": {
+          "package_name": "com.example.railway"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCpcLM01GAySMwmU9w_efyj8lNEy0qMPSk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
