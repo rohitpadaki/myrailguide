@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:myrailguide/pnrresult.dart';
-import 'package:myrailguide/trainresult.dart';
 
 class PNRStatus extends StatefulWidget {
   const PNRStatus({super.key});
