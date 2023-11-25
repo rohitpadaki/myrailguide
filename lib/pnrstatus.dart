@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:myrailguide/pnrresult.dart';
 import 'package:myrailguide/trainresult.dart';
 
-class TrainSchedule extends StatefulWidget {
-  const TrainSchedule({super.key});
+class PNRStatus extends StatefulWidget {
+  const PNRStatus({super.key});
 
   @override
-  State<TrainSchedule> createState() => _TrainScheduleState();
+  State<PNRStatus> createState() => _PNRStatusState();
 }
 
-class _TrainScheduleState extends State<TrainSchedule> {
+class _PNRStatusState extends State<PNRStatus> {
   @override
   Widget build(BuildContext context) {
-    TextEditingController traincontroller = TextEditingController();
-
+    TextEditingController pnrcontroller = TextEditingController();
     const Color bgcolor = Color(0xFFF5F5F5);
     const Color thcolor = Color(0xFF225FDE);
     return SafeArea(
@@ -58,7 +58,7 @@ class _TrainScheduleState extends State<TrainSchedule> {
                     const Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        "Train Schedule",
+                        "PNR Status",
                         style: TextStyle(
                           color: Colors.black,
                           fontFamily: "Urbanist",
@@ -71,7 +71,7 @@ class _TrainScheduleState extends State<TrainSchedule> {
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          'Enter Train Number',
+                          'Enter PNR Number',
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 17,
@@ -84,9 +84,9 @@ class _TrainScheduleState extends State<TrainSchedule> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(bottom: 20),
+                      padding: EdgeInsets.only(bottom: 20),
                       child: TextField(
-                        controller: traincontroller,
+                        controller: pnrcontroller,
                         cursorColor: Colors.black,
                         // decoration: InputDecoration(
                         //   filled: true,
@@ -112,8 +112,7 @@ class _TrainScheduleState extends State<TrainSchedule> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    TrainResult(trainno: traincontroller.text)),
+                                builder: (context) => const PNRResult()),
                           );
                         },
                         elevation: 0,
@@ -124,7 +123,7 @@ class _TrainScheduleState extends State<TrainSchedule> {
                         child: const Padding(
                             padding: EdgeInsets.all(17.0),
                             child: Text(
-                              'GET SCHEDULE',
+                              'GET DETAILS',
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 15,

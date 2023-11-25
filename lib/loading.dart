@@ -36,3 +36,31 @@ class TRSLoading extends StatelessWidget {
         ));
   }
 }
+
+class PNRLoading extends StatelessWidget {
+  const PNRLoading({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Shimmer.fromColors(
+        baseColor: Colors.grey.shade300,
+        highlightColor: Colors.grey.shade100,
+        enabled: true,
+        child: const SingleChildScrollView(
+          physics: NeverScrollableScrollPhysics(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(bottom: 15.0, top: 15),
+                child: BannerPlaceholder(
+                  height: 600,
+                  width: double.infinity,
+                ),
+              ),
+            ],
+          ),
+        ));
+  }
+}

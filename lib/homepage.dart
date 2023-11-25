@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myrailguide/feedback.dart';
+import 'package:myrailguide/pnrstatus.dart';
 import 'package:myrailguide/trainschedule.dart';
 
 class HomePage extends StatefulWidget {
@@ -164,7 +165,14 @@ class _HomePageState extends State<HomePage> {
                               IconButton(
                                 icon: Image.asset('assets/images/ticket.png'),
                                 iconSize: 40,
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const PNRStatus()),
+                                  );
+                                },
                               ),
                               const Text(
                                 'PNR\nStatus',

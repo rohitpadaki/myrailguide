@@ -17,8 +17,8 @@ class _FeedbackCompState extends State<FeedbackComp> {
     Future<void> submitFeedback(fbcoll, fbstring) {
       return fbcoll
           .add({'feedback': fbstring})
-          .then((value) => print("Feedback Added"))
-          .catchError((error) => print("Failed to add FB"));
+          .then((value) => print("Feedback Added $value"))
+          .catchError((error) => print("Failed to add $error"));
     }
 
     const Color bgcolor = Color(0xFFF5F5F5);
@@ -123,7 +123,9 @@ class _FeedbackCompState extends State<FeedbackComp> {
                         onPressed: () {
                           CollectionReference fbcoll =
                               firestore.collection('feedback');
-                          submitFeedback(fbcoll, fbcontroller.text);
+                          if (fbcontroller.text.trim() != '') {
+                            submitFeedback(fbcoll, fbcontroller.text.trim());
+                          }
                           Navigator.pop(context);
                         },
                         elevation: 0,
