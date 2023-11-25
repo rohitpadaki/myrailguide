@@ -9,9 +9,22 @@ class TrainSchedule extends StatefulWidget {
 }
 
 class _TrainScheduleState extends State<TrainSchedule> {
+  bool isNumeric(String? s) {
+    if (s == null) {
+      return false;
+    }
+    return double.tryParse(s) != null;
+  }
+
   @override
   Widget build(BuildContext context) {
     TextEditingController traincontroller = TextEditingController();
+    bool verifyFormat() {
+      if (traincontroller.text == '' || !isNumeric(traincontroller.text)) {
+        return false;
+      }
+      return true;
+    }
 
     const Color bgcolor = Color(0xFFF5F5F5);
     const Color thcolor = Color(0xFF225FDE);
@@ -109,12 +122,14 @@ class _TrainScheduleState extends State<TrainSchedule> {
                       child: MaterialButton(
                         minWidth: double.infinity,
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    TrainResult(trainno: traincontroller.text)),
-                          );
+                          if (verifyFormat()) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => TrainResult(
+                                      trainno: traincontroller.text)),
+                            );
+                          }
                         },
                         elevation: 0,
                         color: thcolor,

@@ -223,11 +223,11 @@ class _FeedbackCompState extends State<FeedbackComp> {
                 ),
                 toolbarHeight: 72,
               ),
-              body: SafeArea(
+              body: const SafeArea(
                 child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 35),
+                    padding: EdgeInsets.symmetric(horizontal: 35),
                     child: Column(children: [
-                      const Align(
+                      Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
                           "Feedback & Complaints",
@@ -238,7 +238,7 @@ class _FeedbackCompState extends State<FeedbackComp> {
                           ),
                         ),
                       ),
-                      const Padding(
+                      Padding(
                         padding: EdgeInsets.only(top: 30),
                         child: Align(
                           alignment: Alignment.centerLeft,

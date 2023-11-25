@@ -11,37 +11,55 @@ class TrainResult extends StatefulWidget {
 }
 
 class _TrainResultState extends State<TrainResult> {
-  bool status = true;
+  int status = 0;
   Map<String, dynamic>? res;
-  bool isNumeric(String? s) {
-    if (s == null) {
-      return false;
+
+  Future<Map<String, dynamic>?> fetchData(trainno) async {
+    try {
+      DocumentSnapshot<Map<String, dynamic>> document = await FirebaseFirestore
+          .instance
+          .collection('train')
+          .doc(trainno)
+          .get();
+
+      String trainName = document['trainname'];
+      List<bool> week = List<bool>.from(document['week']);
+      int trainNo = document['trainno'];
+
+      DocumentReference<Map<String, dynamic>> fromRef = document['from'];
+      DocumentReference<Map<String, dynamic>> toRef = document['to'];
+
+      DocumentSnapshot<Map<String, dynamic>> fromSnapshot = await fromRef.get();
+      Map<String, dynamic> fromData = fromSnapshot.data()!;
+
+      DocumentSnapshot<Map<String, dynamic>> toSnapshot = await toRef.get();
+      Map<String, dynamic> toData = toSnapshot.data()!;
+
+      return {
+        'trainName': trainName,
+        'week': week,
+        'trainNo': trainNo,
+        'from': fromData,
+        'to': toData,
+      };
+    } catch (e) {
+      return null;
     }
-    return double.tryParse(s) != null;
   }
 
-  Future<Map<String, dynamic>?> verifyTrain(trainno) async {
-    if (!isNumeric(trainno)) return null;
-    Map<String, dynamic>? data;
-    CollectionReference traincoll =
-        FirebaseFirestore.instance.collection('train');
-    final query = traincoll.where("trainno", isEqualTo: int.parse(trainno));
-    final querySnapshot = await query.get();
-    data = (querySnapshot.docs.isNotEmpty)
-        ? querySnapshot.docs.first.data() as Map<String, dynamic>
-        : null;
-    return data;
-  }
-
-  change() {
+  change(int num) {
     setState(() {
-      status = (status) ? false : true;
+      status = num;
     });
   }
 
   work() async {
-    res = await verifyTrain(widget.trainno);
-    if (res != null) change();
+    res = await fetchData(widget.trainno);
+    if (res != null) {
+      change(1);
+    } else {
+      change(2);
+    }
   }
 
   @override
@@ -106,11 +124,13 @@ class _TrainResultState extends State<TrainResult> {
                           ),
                         ),
                       ),
-                      status
+                      status == 0
                           ? const TRSLoading()
-                          : TrainDetails(
-                              result: res,
-                            ),
+                          : status == 1
+                              ? TrainDetails(
+                                  result: res,
+                                )
+                              : const CantFindTrain(),
                     ])),
               ),
             )));
@@ -128,6 +148,7 @@ class TrainDetails extends StatefulWidget {
 class _TrainDetailsState extends State<TrainDetails> {
   @override
   Widget build(BuildContext context) {
+    // print(widget.result['from']);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 23.0),
       child: Column(
@@ -154,7 +175,8 @@ class _TrainDetailsState extends State<TrainDetails> {
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 15.0),
                   child: Text(
-                    "${widget.result?['tname'].toUpperCase()} (${widget.result?['trainno']})",
+                    // "hello",
+                    "${widget.result?['trainName'].toUpperCase()} (${widget.result?['trainNo']})",
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 19,
@@ -170,36 +192,38 @@ class _TrainDetailsState extends State<TrainDetails> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        '${widget.result?['from'][0]} \n(${widget.result?['from'][1]})',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 15,
-                          fontFamily: 'Urbanist',
-                          fontWeight: FontWeight.w400,
-                          height: 0,
-                          letterSpacing: 0.04,
-                        ),
-                      ),
-                      const Expanded(
-                        child: Center(
-                          child: Icon(
-                            Icons.swap_horiz_rounded,
+                      Expanded(
+                        child: Text(
+                          // "Hello",
+                          '${widget.result?['from']['station']} \n(${widget.result?['from']['sid']})',
+                          style: const TextStyle(
                             color: Colors.white,
-                            size: 40,
+                            fontSize: 16,
+                            fontFamily: 'Urbanist',
+                            fontWeight: FontWeight.w500,
+                            height: 0,
+                            letterSpacing: 0.04,
                           ),
                         ),
                       ),
-                      Text(
-                        '${widget.result?['to'][0]} \n(${widget.result?['to'][1]})',
-                        textAlign: TextAlign.right,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 15,
-                          fontFamily: 'Urbanist',
-                          fontWeight: FontWeight.w400,
-                          height: 0,
-                          letterSpacing: 0.04,
+                      const Icon(
+                        Icons.swap_horiz_rounded,
+                        color: Colors.white,
+                        size: 40,
+                      ),
+                      Expanded(
+                        child: Text(
+                          // "Hello",
+                          '${widget.result?['to']['station']} \n(${widget.result?['to']['sid']})',
+                          textAlign: TextAlign.right,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontFamily: 'Urbanist',
+                            fontWeight: FontWeight.w500,
+                            height: 0,
+                            letterSpacing: 0.04,
+                          ),
                         ),
                       )
                     ],
@@ -210,6 +234,38 @@ class _TrainDetailsState extends State<TrainDetails> {
           )
         ],
       ),
+    );
+  }
+}
+
+class CantFindTrain extends StatelessWidget {
+  const CantFindTrain({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        SizedBox(
+          height: MediaQuery.of(context).size.height / 2 - 280,
+        ),
+        Image.asset(
+          "assets/images/no-results.png",
+          width: 150,
+          height: 150,
+        ),
+        const Padding(
+          padding: EdgeInsets.symmetric(vertical: 30.0),
+          child: Text(
+            "Couldn't find the train you were looking for.",
+            style: TextStyle(
+                color: Colors.black,
+                fontFamily: "Urbanist",
+                fontSize: 24,
+                fontWeight: FontWeight.w600),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ],
     );
   }
 }

@@ -83,7 +83,7 @@ class _PNRStatusState extends State<PNRStatus> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(bottom: 20),
+                      padding: const EdgeInsets.only(bottom: 20),
                       child: TextField(
                         controller: pnrcontroller,
                         cursorColor: Colors.black,

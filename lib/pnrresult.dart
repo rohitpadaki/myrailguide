@@ -76,9 +76,9 @@ class _PNRResultState extends State<PNRResult> {
                         onPressed: () {
                           change();
                         },
-                        child: Text("CHANGE"),
+                        child: const Text("CHANGE"),
                       ),
-                      status ? PNRLoading() : PNRDetails(),
+                      status ? const PNRLoading() : const PNRDetails(),
                     ])),
               ),
             )));
