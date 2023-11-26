@@ -15,29 +15,30 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     const Color bgcolor = Color(0xFFF5F5F5);
     const Color thcolor = Color(0xFF225FDE);
-    return SafeArea(
-      child: Scaffold(
+    return Scaffold(
+      backgroundColor: bgcolor,
+      appBar: AppBar(
         backgroundColor: bgcolor,
-        appBar: AppBar(
-          backgroundColor: bgcolor,
-          elevation: 0,
-          leading: null,
-          automaticallyImplyLeading: false,
-          titleSpacing: 0,
-          title: const Padding(
-            padding: EdgeInsets.only(left: 35, right: 35, top: 20),
-            child: Text(
-              "MyRailGuide",
-              style: TextStyle(
-                  color: Colors.black,
-                  fontFamily: "Urbanist",
-                  fontSize: 36,
-                  fontWeight: FontWeight.w700),
-            ),
+        elevation: 0,
+        leading: null,
+        automaticallyImplyLeading: false,
+        titleSpacing: 0,
+        title: const Padding(
+          padding: EdgeInsets.only(left: 35, right: 35, top: 20),
+          child: Text(
+            "MyRailGuide",
+            style: TextStyle(
+                color: Colors.black,
+                fontFamily: "Urbanist",
+                fontSize: 36,
+                fontWeight: FontWeight.w700),
           ),
-          toolbarHeight: 72,
         ),
-        body: SafeArea(
+        toolbarHeight: 72,
+      ),
+      body: SingleChildScrollView(
+        physics: const NeverScrollableScrollPhysics(),
+        child: SafeArea(
             child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 35),
           child: Column(

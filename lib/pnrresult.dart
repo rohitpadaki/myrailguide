@@ -20,68 +20,67 @@ class _PNRResultState extends State<PNRResult> {
       });
     }
 
-    return SafeArea(
-        child: Scaffold(
-            backgroundColor: bgcolor,
-            appBar: AppBar(
-              backgroundColor: bgcolor,
-              elevation: 0,
-              actions: [
-                Padding(
-                  padding: const EdgeInsets.only(right: 20, top: 20),
-                  child: IconButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      icon: const Icon(
-                        Icons.arrow_back_ios_new_rounded,
-                        size: 30,
-                        color: Colors.black,
-                      )),
-                )
-              ],
-              leading: null,
-              automaticallyImplyLeading: false,
-              titleSpacing: 0,
-              title: const Padding(
-                padding: EdgeInsets.only(left: 35, right: 35, top: 20),
-                child: Text(
-                  "MyRailGuide",
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontFamily: "Urbanist",
-                      fontSize: 36,
-                      fontWeight: FontWeight.w700),
-                ),
-              ),
-              toolbarHeight: 72,
+    return Scaffold(
+        backgroundColor: bgcolor,
+        appBar: AppBar(
+          backgroundColor: bgcolor,
+          elevation: 0,
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 20, top: 20),
+              child: IconButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  icon: const Icon(
+                    Icons.arrow_back_ios_new_rounded,
+                    size: 30,
+                    color: Colors.black,
+                  )),
+            )
+          ],
+          leading: null,
+          automaticallyImplyLeading: false,
+          titleSpacing: 0,
+          title: const Padding(
+            padding: EdgeInsets.only(left: 35, right: 35, top: 20),
+            child: Text(
+              "MyRailGuide",
+              style: TextStyle(
+                  color: Colors.black,
+                  fontFamily: "Urbanist",
+                  fontSize: 36,
+                  fontWeight: FontWeight.w700),
             ),
-            body: SingleChildScrollView(
-              child: SafeArea(
-                child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 35),
-                    child: Column(children: [
-                      const Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          "Train Schedule",
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontFamily: "Urbanist",
-                            fontSize: 25,
-                          ),
-                        ),
+          ),
+          toolbarHeight: 72,
+        ),
+        body: SingleChildScrollView(
+          child: SafeArea(
+            child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 35),
+                child: Column(children: [
+                  const Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Train Schedule",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontFamily: "Urbanist",
+                        fontSize: 25,
                       ),
-                      MaterialButton(
-                        onPressed: () {
-                          change();
-                        },
-                        child: const Text("CHANGE"),
-                      ),
-                      status ? const PNRLoading() : const PNRDetails(),
-                    ])),
-              ),
-            )));
+                    ),
+                  ),
+                  MaterialButton(
+                    onPressed: () {
+                      change();
+                    },
+                    child: const Text("CHANGE"),
+                  ),
+                  status ? const PNRLoading() : const PNRDetails(),
+                ])),
+          ),
+        ));
   }
 }
 

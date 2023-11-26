@@ -20,16 +20,28 @@ class TRSLoading extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.only(bottom: 15.0, top: 15),
                 child: BannerPlaceholder(
-                  height: 120,
+                  height: 214,
                   width: double.infinity,
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 3.0),
-                child: BannerPlaceholder(
-                  height: 500,
-                  width: 200,
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 3.0),
+                    child: BannerPlaceholder(
+                      height: 450,
+                      width: 200,
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 3.0),
+                    child: BannerPlaceholder(
+                      height: 450,
+                      width: 90,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

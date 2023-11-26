@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:myrailguide/loading.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:myrailguide/timeline.dart';
 
 class TrainResult extends StatefulWidget {
   final String? trainno;
@@ -25,6 +26,7 @@ class _TrainResultState extends State<TrainResult> {
       String trainName = document['trainname'];
       List<bool> week = List<bool>.from(document['week']);
       int trainNo = document['trainno'];
+      var sch = document['schedule'];
 
       DocumentReference<Map<String, dynamic>> fromRef = document['from'];
       DocumentReference<Map<String, dynamic>> toRef = document['to'];
@@ -34,13 +36,22 @@ class _TrainResultState extends State<TrainResult> {
 
       DocumentSnapshot<Map<String, dynamic>> toSnapshot = await toRef.get();
       Map<String, dynamic> toData = toSnapshot.data()!;
-
+      List<dynamic> schedules = [];
+      for (var i in sch) {
+        DocumentReference<Map<String, dynamic>> stat = i['station'];
+        Map<String, dynamic> time = {"time": i['time']};
+        DocumentSnapshot<Map<String, dynamic>> fromSnapshot = await stat.get();
+        Map<String, dynamic> fromData = fromSnapshot.data()!;
+        fromData.addAll(time);
+        schedules.add(fromData);
+      }
       return {
         'trainName': trainName,
         'week': week,
         'trainNo': trainNo,
         'from': fromData,
         'to': toData,
+        'schedule': schedules
       };
     } catch (e) {
       return null;
@@ -71,69 +82,68 @@ class _TrainResultState extends State<TrainResult> {
   @override
   Widget build(BuildContext context) {
     const Color bgcolor = Color(0xFFF5F5F5);
-
-    return SafeArea(
-        child: Scaffold(
-            backgroundColor: bgcolor,
-            appBar: AppBar(
-              backgroundColor: bgcolor,
-              elevation: 0,
-              actions: [
-                Padding(
-                  padding: const EdgeInsets.only(right: 20, top: 20),
-                  child: IconButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      icon: const Icon(
-                        Icons.arrow_back_ios_new_rounded,
-                        size: 30,
-                        color: Colors.black,
-                      )),
-                )
-              ],
-              leading: null,
-              automaticallyImplyLeading: false,
-              titleSpacing: 0,
-              title: const Padding(
-                padding: EdgeInsets.only(left: 35, right: 35, top: 20),
-                child: Text(
-                  "MyRailGuide",
-                  style: TextStyle(
+    return Scaffold(
+        backgroundColor: bgcolor,
+        appBar: AppBar(
+          backgroundColor: bgcolor,
+          elevation: 0,
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 20, top: 20),
+              child: IconButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  icon: const Icon(
+                    Icons.arrow_back_ios_new_rounded,
+                    size: 30,
+                    color: Colors.black,
+                  )),
+            )
+          ],
+          leading: null,
+          automaticallyImplyLeading: false,
+          titleSpacing: 0,
+          title: const Padding(
+            padding: EdgeInsets.only(left: 35, right: 35, top: 20),
+            child: Text(
+              "MyRailGuide",
+              style: TextStyle(
+                  color: Colors.black,
+                  fontFamily: "Urbanist",
+                  fontSize: 36,
+                  fontWeight: FontWeight.w700),
+            ),
+          ),
+          toolbarHeight: 72,
+        ),
+        body: SafeArea(
+          child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 35),
+              child: Column(children: [
+                const Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "Train Schedule",
+                    style: TextStyle(
                       color: Colors.black,
                       fontFamily: "Urbanist",
-                      fontSize: 36,
-                      fontWeight: FontWeight.w700),
+                      fontSize: 25,
+                    ),
+                  ),
                 ),
-              ),
-              toolbarHeight: 72,
-            ),
-            body: SingleChildScrollView(
-              child: SafeArea(
-                child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 35),
-                    child: Column(children: [
-                      const Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          "Train Schedule",
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontFamily: "Urbanist",
-                            fontSize: 25,
-                          ),
-                        ),
-                      ),
-                      status == 0
+                Expanded(
+                  child: SingleChildScrollView(
+                      child: status == 0
                           ? const TRSLoading()
                           : status == 1
                               ? TrainDetails(
                                   result: res,
                                 )
-                              : const CantFindTrain(),
-                    ])),
-              ),
-            )));
+                              : const CantFindTrain()),
+                )
+              ])),
+        ));
   }
 }
 
@@ -155,20 +165,12 @@ class _TrainDetailsState extends State<TrainDetails> {
         children: [
           Container(
             width: double.infinity,
-            height: 120,
+            // height: 120,
             decoration: ShapeDecoration(
               color: const Color(0xFF225FDE),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15),
               ),
-              shadows: const [
-                BoxShadow(
-                  color: Color(0x3F000000),
-                  blurRadius: 25,
-                  offset: Offset(0, 4),
-                  spreadRadius: 1,
-                )
-              ],
             ),
             child: Column(
               children: [
@@ -188,7 +190,8 @@ class _TrainDetailsState extends State<TrainDetails> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                  padding: const EdgeInsets.only(
+                      left: 15.0, right: 15, top: 5, bottom: 15),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -228,10 +231,133 @@ class _TrainDetailsState extends State<TrainDetails> {
                       )
                     ],
                   ),
-                )
+                ),
+                const Divider(
+                  color: Colors.white,
+                  thickness: 1,
+                  indent: 15,
+                  endIndent: 15,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                      left: 5.0, right: 5, top: 10, bottom: 15),
+                  child: GridView.count(
+                    childAspectRatio: 1.5,
+                    physics: const NeverScrollableScrollPhysics(),
+                    padding: const EdgeInsets.symmetric(vertical: 0),
+                    shrinkWrap: true,
+                    crossAxisCount: 7,
+                    children: [
+                      const Center(
+                          child: Text(
+                        "Sun",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontFamily: 'Urbanist',
+                          fontWeight: FontWeight.w600,
+                          height: 0,
+                          letterSpacing: 0.50,
+                        ),
+                      )),
+                      const Center(
+                          child: Text(
+                        "Mon",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontFamily: 'Urbanist',
+                          fontWeight: FontWeight.w600,
+                          height: 0,
+                          letterSpacing: 0.50,
+                        ),
+                      )),
+                      const Center(
+                          child: Text(
+                        "Tue",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontFamily: 'Urbanist',
+                          fontWeight: FontWeight.w600,
+                          height: 0,
+                          letterSpacing: 0.50,
+                        ),
+                      )),
+                      const Center(
+                          child: Text(
+                        "Wed",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontFamily: 'Urbanist',
+                          fontWeight: FontWeight.w600,
+                          height: 0,
+                          letterSpacing: 0.50,
+                        ),
+                      )),
+                      const Center(
+                          child: Text(
+                        "Thu",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontFamily: 'Urbanist',
+                          fontWeight: FontWeight.w600,
+                          height: 0,
+                          letterSpacing: 0.50,
+                        ),
+                      )),
+                      const Center(
+                          child: Text(
+                        "Fri",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontFamily: 'Urbanist',
+                          fontWeight: FontWeight.w600,
+                          height: 0,
+                          letterSpacing: 0.50,
+                        ),
+                      )),
+                      const Center(
+                          child: Text(
+                        "Sat",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontFamily: 'Urbanist',
+                          fontWeight: FontWeight.w600,
+                          height: 0,
+                          letterSpacing: 0.50,
+                        ),
+                      )),
+                      for (var i in widget.result!['week'])
+                        (i)
+                            ? const Icon(
+                                Icons.done_rounded,
+                                color: Colors.white,
+                              )
+                            : Container()
+                    ],
+                  ),
+                ),
               ],
             ),
-          )
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+            child: Column(
+              children: [
+                for (var item in widget.result!['schedule'])
+                  Timeline(
+                      isfirst: widget.result!['schedule']!.indexOf(item) == 0,
+                      islast: widget.result!['schedule']!.indexOf(item) ==
+                          widget.result!['schedule'].length - 1,
+                      payload: item),
+              ],
+            ),
+          ),
         ],
       ),
     );
