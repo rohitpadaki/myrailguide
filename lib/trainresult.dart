@@ -118,31 +118,32 @@ class _TrainResultState extends State<TrainResult> {
           toolbarHeight: 72,
         ),
         body: SafeArea(
-          child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 35),
-              child: Column(children: [
-                const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    "Train Schedule",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontFamily: "Urbanist",
-                      fontSize: 25,
-                    ),
+          child: Column(children: [
+            const Padding(
+              padding: EdgeInsets.only(left: 35, right: 35, bottom: 10),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Train Schedule",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontFamily: "Urbanist",
+                    fontSize: 25,
                   ),
                 ),
-                Expanded(
-                  child: SingleChildScrollView(
-                      child: status == 0
-                          ? const TRSLoading()
-                          : status == 1
-                              ? TrainDetails(
-                                  result: res,
-                                )
-                              : const CantFindTrain()),
-                )
-              ])),
+              ),
+            ),
+            Expanded(
+              child: SingleChildScrollView(
+                  child: status == 0
+                      ? const TRSLoading()
+                      : status == 1
+                          ? TrainDetails(
+                              result: res,
+                            )
+                          : const CantFindTrain()),
+            )
+          ]),
         ));
   }
 }
@@ -160,193 +161,204 @@ class _TrainDetailsState extends State<TrainDetails> {
   Widget build(BuildContext context) {
     // print(widget.result['from']);
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 23.0),
+      padding: const EdgeInsets.symmetric(vertical: 25.0),
       child: Column(
         children: [
-          Container(
-            width: double.infinity,
-            // height: 120,
-            decoration: ShapeDecoration(
-              color: const Color(0xFF225FDE),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
-              ),
-            ),
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 15.0),
-                  child: Text(
-                    // "hello",
-                    "${widget.result?['trainName'].toUpperCase()} (${widget.result?['trainNo']})",
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 19,
-                      fontFamily: 'Urbanist',
-                      fontWeight: FontWeight.w600,
-                      height: 0,
-                      letterSpacing: 0.50,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 35),
+            child: Container(
+              width: double.infinity,
+              // height: 120,
+              decoration: ShapeDecoration(
+                  color: const Color(0xFF225FDE),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  shadows: const [
+                    BoxShadow(
+                      color: Color(0x3F000000),
+                      blurRadius: 25,
+                      offset: Offset(0, 4),
+                      spreadRadius: 1,
+                    )
+                  ]),
+
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 15.0),
+                    child: Text(
+                      // "hello",
+                      "${widget.result?['trainName'].toUpperCase()} (${widget.result?['trainNo']})",
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 19,
+                        fontFamily: 'Urbanist',
+                        fontWeight: FontWeight.w600,
+                        height: 0,
+                        letterSpacing: 0.50,
+                      ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                      left: 15.0, right: 15, top: 5, bottom: 15),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: Text(
-                          // "Hello",
-                          '${widget.result?['from']['station']} \n(${widget.result?['from']['sid']})',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontFamily: 'Urbanist',
-                            fontWeight: FontWeight.w500,
-                            height: 0,
-                            letterSpacing: 0.04,
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        left: 15.0, right: 15, top: 5, bottom: 15),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            // "Hello",
+                            '${widget.result?['from']['station']} \n(${widget.result?['from']['sid']})',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontFamily: 'Urbanist',
+                              fontWeight: FontWeight.w500,
+                              height: 0,
+                              letterSpacing: 0.04,
+                            ),
                           ),
                         ),
-                      ),
-                      const Icon(
-                        Icons.swap_horiz_rounded,
-                        color: Colors.white,
-                        size: 40,
-                      ),
-                      Expanded(
-                        child: Text(
-                          // "Hello",
-                          '${widget.result?['to']['station']} \n(${widget.result?['to']['sid']})',
-                          textAlign: TextAlign.right,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontFamily: 'Urbanist',
-                            fontWeight: FontWeight.w500,
-                            height: 0,
-                            letterSpacing: 0.04,
+                        const Icon(
+                          Icons.swap_horiz_rounded,
+                          color: Colors.white,
+                          size: 40,
+                        ),
+                        Expanded(
+                          child: Text(
+                            // "Hello",
+                            '${widget.result?['to']['station']} \n(${widget.result?['to']['sid']})',
+                            textAlign: TextAlign.right,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontFamily: 'Urbanist',
+                              fontWeight: FontWeight.w500,
+                              height: 0,
+                              letterSpacing: 0.04,
+                            ),
                           ),
-                        ),
-                      )
-                    ],
+                        )
+                      ],
+                    ),
                   ),
-                ),
-                const Divider(
-                  color: Colors.white,
-                  thickness: 1,
-                  indent: 15,
-                  endIndent: 15,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                      left: 5.0, right: 5, top: 10, bottom: 15),
-                  child: GridView.count(
-                    childAspectRatio: 1.5,
-                    physics: const NeverScrollableScrollPhysics(),
-                    padding: const EdgeInsets.symmetric(vertical: 0),
-                    shrinkWrap: true,
-                    crossAxisCount: 7,
-                    children: [
-                      const Center(
-                          child: Text(
-                        "Sun",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 15,
-                          fontFamily: 'Urbanist',
-                          fontWeight: FontWeight.w600,
-                          height: 0,
-                          letterSpacing: 0.50,
-                        ),
-                      )),
-                      const Center(
-                          child: Text(
-                        "Mon",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 15,
-                          fontFamily: 'Urbanist',
-                          fontWeight: FontWeight.w600,
-                          height: 0,
-                          letterSpacing: 0.50,
-                        ),
-                      )),
-                      const Center(
-                          child: Text(
-                        "Tue",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 15,
-                          fontFamily: 'Urbanist',
-                          fontWeight: FontWeight.w600,
-                          height: 0,
-                          letterSpacing: 0.50,
-                        ),
-                      )),
-                      const Center(
-                          child: Text(
-                        "Wed",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 15,
-                          fontFamily: 'Urbanist',
-                          fontWeight: FontWeight.w600,
-                          height: 0,
-                          letterSpacing: 0.50,
-                        ),
-                      )),
-                      const Center(
-                          child: Text(
-                        "Thu",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 15,
-                          fontFamily: 'Urbanist',
-                          fontWeight: FontWeight.w600,
-                          height: 0,
-                          letterSpacing: 0.50,
-                        ),
-                      )),
-                      const Center(
-                          child: Text(
-                        "Fri",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 15,
-                          fontFamily: 'Urbanist',
-                          fontWeight: FontWeight.w600,
-                          height: 0,
-                          letterSpacing: 0.50,
-                        ),
-                      )),
-                      const Center(
-                          child: Text(
-                        "Sat",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 15,
-                          fontFamily: 'Urbanist',
-                          fontWeight: FontWeight.w600,
-                          height: 0,
-                          letterSpacing: 0.50,
-                        ),
-                      )),
-                      for (var i in widget.result!['week'])
-                        (i)
-                            ? const Icon(
-                                Icons.done_rounded,
-                                color: Colors.white,
-                              )
-                            : Container()
-                    ],
+                  const Divider(
+                    color: Colors.white,
+                    thickness: 1,
+                    indent: 15,
+                    endIndent: 15,
                   ),
-                ),
-              ],
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        left: 5.0, right: 5, top: 10, bottom: 15),
+                    child: GridView.count(
+                      childAspectRatio: 1.5,
+                      physics: const NeverScrollableScrollPhysics(),
+                      padding: const EdgeInsets.symmetric(vertical: 0),
+                      shrinkWrap: true,
+                      crossAxisCount: 7,
+                      children: [
+                        const Center(
+                            child: Text(
+                          "Sun",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                            fontFamily: 'Urbanist',
+                            fontWeight: FontWeight.w600,
+                            height: 0,
+                            letterSpacing: 0.50,
+                          ),
+                        )),
+                        const Center(
+                            child: Text(
+                          "Mon",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                            fontFamily: 'Urbanist',
+                            fontWeight: FontWeight.w600,
+                            height: 0,
+                            letterSpacing: 0.50,
+                          ),
+                        )),
+                        const Center(
+                            child: Text(
+                          "Tue",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                            fontFamily: 'Urbanist',
+                            fontWeight: FontWeight.w600,
+                            height: 0,
+                            letterSpacing: 0.50,
+                          ),
+                        )),
+                        const Center(
+                            child: Text(
+                          "Wed",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                            fontFamily: 'Urbanist',
+                            fontWeight: FontWeight.w600,
+                            height: 0,
+                            letterSpacing: 0.50,
+                          ),
+                        )),
+                        const Center(
+                            child: Text(
+                          "Thu",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                            fontFamily: 'Urbanist',
+                            fontWeight: FontWeight.w600,
+                            height: 0,
+                            letterSpacing: 0.50,
+                          ),
+                        )),
+                        const Center(
+                            child: Text(
+                          "Fri",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                            fontFamily: 'Urbanist',
+                            fontWeight: FontWeight.w600,
+                            height: 0,
+                            letterSpacing: 0.50,
+                          ),
+                        )),
+                        const Center(
+                            child: Text(
+                          "Sat",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                            fontFamily: 'Urbanist',
+                            fontWeight: FontWeight.w600,
+                            height: 0,
+                            letterSpacing: 0.50,
+                          ),
+                        )),
+                        for (var i in widget.result!['week'])
+                          (i)
+                              ? const Icon(
+                                  Icons.done_rounded,
+                                  color: Colors.white,
+                                )
+                              : Container()
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 43, vertical: 10),
             child: Column(
               children: [
                 for (var item in widget.result!['schedule'])
