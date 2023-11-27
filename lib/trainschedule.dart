@@ -98,6 +98,7 @@ class _TrainScheduleState extends State<TrainSchedule> {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 20),
                   child: TextField(
+                    keyboardType: TextInputType.number,
                     controller: traincontroller,
                     cursorColor: Colors.black,
                     // decoration: InputDecoration(

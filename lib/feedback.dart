@@ -218,11 +218,11 @@ class _FeedbackCompState extends State<FeedbackComp> {
             ),
             toolbarHeight: 72,
           ),
-          body: const SafeArea(
+          body: SafeArea(
             child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 35),
+                padding: const EdgeInsets.symmetric(horizontal: 35),
                 child: Column(children: [
-                  Align(
+                  const Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
                       "Feedback & Complaints",
@@ -233,23 +233,42 @@ class _FeedbackCompState extends State<FeedbackComp> {
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 30),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Thank you',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 17,
-                          fontFamily: 'Urbanist',
-                          fontWeight: FontWeight.w400,
-                          height: 0,
-                          letterSpacing: 0.50,
+                  Column(
+                    children: [
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height / 2 - 280,
+                      ),
+                      Image.asset(
+                        "assets/images/check-mark.png",
+                        width: 125,
+                        height: 125,
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.only(top: 30.0, bottom: 5),
+                        child: Text(
+                          "Thank you for your feedback!",
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontFamily: "Urbanist",
+                              fontSize: 26,
+                              fontWeight: FontWeight.w600),
+                          textAlign: TextAlign.center,
                         ),
                       ),
-                    ),
-                  ),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 2.0),
+                        child: Text(
+                          "Your feedback is valuable and will helps us improve and better meet your needs",
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontFamily: "Urbanist",
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ],
+                  )
                 ])),
           )),
     ];

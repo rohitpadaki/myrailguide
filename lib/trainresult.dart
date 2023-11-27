@@ -3,6 +3,8 @@ import 'package:myrailguide/loading.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:myrailguide/timeline.dart';
 
+const Color thcolor = Color(0xFF225FDE);
+
 class TrainResult extends StatefulWidget {
   final String? trainno;
   const TrainResult({super.key, this.trainno});
@@ -64,7 +66,7 @@ class _TrainResultState extends State<TrainResult> {
     });
   }
 
-  work() async {
+  Future<void> work() async {
     res = await fetchData(widget.trainno);
     if (res != null) {
       change(1);
@@ -134,14 +136,22 @@ class _TrainResultState extends State<TrainResult> {
               ),
             ),
             Expanded(
-              child: SingleChildScrollView(
-                  child: status == 0
-                      ? const TRSLoading()
-                      : status == 1
-                          ? TrainDetails(
-                              result: res,
-                            )
-                          : const CantFindTrain()),
+              child: RefreshIndicator(
+                onRefresh: () {
+                  change(0);
+                  return work();
+                },
+                color: thcolor,
+                strokeWidth: 3,
+                child: SingleChildScrollView(
+                    child: status == 0
+                        ? const TRSLoading()
+                        : status == 1
+                            ? TrainDetails(
+                                result: res,
+                              )
+                            : const CantFindTrain()),
+              ),
             )
           ]),
         ));
@@ -388,18 +398,30 @@ class CantFindTrain extends StatelessWidget {
         ),
         Image.asset(
           "assets/images/no-results.png",
-          width: 150,
-          height: 150,
+          width: 140,
+          height: 140,
         ),
         const Padding(
-          padding: EdgeInsets.symmetric(vertical: 30.0),
+          padding: EdgeInsets.only(top: 30.0, bottom: 5),
           child: Text(
-            "Couldn't find the train you were looking for.",
+            "Couldn't get results on the train!",
             style: TextStyle(
                 color: Colors.black,
                 fontFamily: "Urbanist",
-                fontSize: 24,
+                fontSize: 26,
                 fontWeight: FontWeight.w600),
+            textAlign: TextAlign.center,
+          ),
+        ),
+        const Padding(
+          padding: EdgeInsets.symmetric(vertical: 5.0),
+          child: Text(
+            "Try verifying the entered train number.",
+            style: TextStyle(
+                color: Colors.black,
+                fontFamily: "Urbanist",
+                fontSize: 18,
+                fontWeight: FontWeight.w500),
             textAlign: TextAlign.center,
           ),
         ),
