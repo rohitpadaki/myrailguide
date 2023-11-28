@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:myrailguide/homepage.dart';
+import 'package:myrailguide/nav.dart';
 import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -24,7 +24,7 @@ class _HomeState extends State<Home> {
     return MaterialApp(
       theme: ThemeData(primaryColor: Colors.white),
       debugShowCheckedModeBanner: false,
-      home: const HomePage(),
+      home: const Navbar(),
     );
   }
 }

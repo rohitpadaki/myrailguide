@@ -40,15 +40,18 @@ class EndCard extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            str,
-            style: const TextStyle(
-              color: Colors.black,
-              fontSize: 15,
-              fontFamily: 'Urbanist',
-              fontWeight: FontWeight.w500,
-              height: 0,
-              letterSpacing: 0.50,
+          Container(
+            constraints: const BoxConstraints(maxWidth: 200),
+            child: Text(
+              str,
+              style: const TextStyle(
+                color: Colors.black,
+                fontSize: 15,
+                fontFamily: 'Urbanist',
+                fontWeight: FontWeight.w500,
+                height: 0,
+                letterSpacing: 0.50,
+              ),
             ),
           ),
           Text(

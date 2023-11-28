@@ -27,7 +27,7 @@ class _TrainResultState extends State<TrainResult> {
 
       String trainName = document['trainname'];
       List<bool> week = List<bool>.from(document['week']);
-      int trainNo = document['trainno'];
+      String trainNo = document['trainno'];
       var sch = document['schedule'];
 
       DocumentReference<Map<String, dynamic>> fromRef = document['from'];

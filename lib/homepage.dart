@@ -37,7 +37,7 @@ class _HomePageState extends State<HomePage> {
         toolbarHeight: 72,
       ),
       body: SingleChildScrollView(
-        physics: const NeverScrollableScrollPhysics(),
+        // physics: const NeverScrollableScrollPhysics(),
         child: SafeArea(
             child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 35),
@@ -92,15 +92,18 @@ class _HomePageState extends State<HomePage> {
                         ),
                         const Padding(
                           padding: EdgeInsets.symmetric(vertical: 8),
-                          child: Text(
-                            'You currently do not have any journeys planned',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 17,
-                              fontFamily: 'Urbanist',
-                              fontWeight: FontWeight.w400,
-                              height: 0,
-                              letterSpacing: 0.50,
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              'You currently do not have any journeys planned',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 17,
+                                fontFamily: 'Urbanist',
+                                fontWeight: FontWeight.w400,
+                                height: 0,
+                                letterSpacing: 0.50,
+                              ),
                             ),
                           ),
                         ),
@@ -156,10 +159,13 @@ class _HomePageState extends State<HomePage> {
                     shadowColor: Colors.transparent,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 40.0),
-                      child: GridView.count(
+                      child: GridView(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 3),
                         physics: const NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
-                        crossAxisCount: 3,
+                        // crossAxisCount: 3,
                         children: [
                           Column(
                             children: [
