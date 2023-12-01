@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myrailguide/trainresult.dart';
+import 'package:quickalert/quickalert.dart';
 
 class TrainSchedule extends StatefulWidget {
   const TrainSchedule({super.key});
@@ -128,6 +129,15 @@ class _TrainScheduleState extends State<TrainSchedule> {
                           MaterialPageRoute(
                               builder: (context) =>
                                   TrainResult(trainno: traincontroller.text)),
+                        );
+                      } else {
+                        QuickAlert.show(
+                          context: context,
+                          type: QuickAlertType.error,
+                          title: "Invalid Train Number",
+                          text: "Please verify train number and try again!",
+                          autoCloseDuration: const Duration(milliseconds: 3000),
+                          showConfirmBtn: false,
                         );
                       }
                     },

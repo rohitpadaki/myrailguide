@@ -42,10 +42,11 @@ class _TrainResultState extends State<TrainResult> {
       for (var i in sch) {
         DocumentReference<Map<String, dynamic>> stat = i['station'];
         Map<String, dynamic> time = {"time": i['time']};
-        DocumentSnapshot<Map<String, dynamic>> fromSnapshot = await stat.get();
-        Map<String, dynamic> fromData = fromSnapshot.data()!;
-        fromData.addAll(time);
-        schedules.add(fromData);
+        DocumentSnapshot<Map<String, dynamic>> schSnap = await stat.get();
+
+        Map<String, dynamic> schData = schSnap.data()!;
+        schData.addAll(time);
+        schedules.add(schData);
       }
       return {
         'trainName': trainName,
@@ -404,7 +405,7 @@ class CantFindTrain extends StatelessWidget {
         const Padding(
           padding: EdgeInsets.only(top: 30.0, bottom: 5),
           child: Text(
-            "Couldn't get results on the train!",
+            "No results found!",
             style: TextStyle(
                 color: Colors.black,
                 fontFamily: "Urbanist",
@@ -416,7 +417,7 @@ class CantFindTrain extends StatelessWidget {
         const Padding(
           padding: EdgeInsets.symmetric(vertical: 5.0),
           child: Text(
-            "Try verifying the entered train number.",
+            "Try checking the entered train number.",
             style: TextStyle(
                 color: Colors.black,
                 fontFamily: "Urbanist",

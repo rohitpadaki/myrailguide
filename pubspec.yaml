@@ -40,6 +40,7 @@ dependencies:
   firebase: ^9.0.3
   cloud_firestore: ^4.13.2
   timeline_tile: ^2.0.0
+  quickalert: ^1.0.2
 
 dev_dependencies:
   flutter_test:
