@@ -17,14 +17,21 @@ class _TrainResultState extends State<TrainResult> {
   int status = 0;
   Map<String, dynamic>? res;
 
-  Future<Map<String, dynamic>?> fetchData(trainno) async {
+  Future<Map<String, dynamic>?> fetchData(trainno, source) async {
     try {
-      DocumentSnapshot<Map<String, dynamic>> document = await FirebaseFirestore
-          .instance
-          .collection('train')
-          .doc(trainno)
-          .get();
-
+      var db = FirebaseFirestore.instance;
+      DocumentSnapshot<Map<String, dynamic>>? document;
+      try {
+        document = await db
+            .collection('train')
+            .doc(trainno)
+            .get(GetOptions(source: source));
+      } on Exception {
+        document = await db
+            .collection('train')
+            .doc(trainno)
+            .get(const GetOptions(source: Source.server));
+      }
       String trainName = document['trainname'];
       List<bool> week = List<bool>.from(document['week']);
       String trainNo = document['trainno'];
@@ -48,6 +55,7 @@ class _TrainResultState extends State<TrainResult> {
         schData.addAll(time);
         schedules.add(schData);
       }
+
       return {
         'trainName': trainName,
         'week': week,
@@ -67,8 +75,8 @@ class _TrainResultState extends State<TrainResult> {
     });
   }
 
-  Future<void> work() async {
-    res = await fetchData(widget.trainno);
+  Future<void> work(source) async {
+    res = await fetchData(widget.trainno, source);
     if (res != null) {
       change(1);
     } else {
@@ -79,7 +87,7 @@ class _TrainResultState extends State<TrainResult> {
   @override
   void initState() {
     super.initState();
-    work();
+    work(Source.cache);
   }
 
   @override
@@ -140,7 +148,7 @@ class _TrainResultState extends State<TrainResult> {
               child: RefreshIndicator(
                 onRefresh: () {
                   change(0);
-                  return work();
+                  return work(Source.server);
                 },
                 color: thcolor,
                 strokeWidth: 3,
