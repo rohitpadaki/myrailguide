@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:myrailguide/nav.dart';
+import 'package:myrailguide/home/nav.dart';
+import 'package:myrailguide/theme.dart';
 import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -22,7 +23,8 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(primaryColor: Colors.white),
+      theme: lightTheme,
+      darkTheme: darkTheme,
       debugShowCheckedModeBanner: false,
       home: const Navbar(),
     );

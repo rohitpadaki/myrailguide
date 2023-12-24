@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:myrailguide/homepage.dart';
-import 'package:myrailguide/mynav.dart';
-import 'package:myrailguide/pnrstatus.dart';
-import 'package:myrailguide/trainschedule.dart';
+import 'package:myrailguide/home/homepage.dart';
+import 'package:myrailguide/home/mynav.dart';
+import 'package:myrailguide/home/profile.dart';
+import 'package:myrailguide/padding.dart';
+import 'package:myrailguide/trainschedule/trainschedule.dart';
 
 class Navbar extends StatefulWidget {
   const Navbar({super.key});
@@ -35,10 +36,10 @@ class _NavbarState extends State<Navbar> {
           children: const [
             HomePage(),
             TrainSchedule(),
-            PNRStatus(),
+            ProfilePage(),
           ]),
       bottomNavigationBar: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 35.0, vertical: 35),
+        padding: Paddings.doublepad,
         child: MyNav(
             pageIndex: currentPageIndex,
             onTap: (int i) {

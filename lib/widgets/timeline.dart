@@ -42,29 +42,9 @@ class EndCard extends StatelessWidget {
         children: [
           Container(
             constraints: const BoxConstraints(maxWidth: 200),
-            child: Text(
-              str,
-              style: const TextStyle(
-                color: Colors.black,
-                fontSize: 15,
-                fontFamily: 'Urbanist',
-                fontWeight: FontWeight.w500,
-                height: 0,
-                letterSpacing: 0.50,
-              ),
-            ),
+            child: Text(str, style: Theme.of(context).textTheme.bodyMedium),
           ),
-          Text(
-            time,
-            style: const TextStyle(
-              color: Colors.black,
-              fontSize: 15,
-              fontFamily: 'Urbanist',
-              fontWeight: FontWeight.w500,
-              height: 0,
-              letterSpacing: 0.50,
-            ),
-          )
+          Text(time, style: Theme.of(context).textTheme.bodyMedium)
         ],
       ),
     );

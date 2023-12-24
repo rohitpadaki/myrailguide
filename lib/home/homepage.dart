@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:myrailguide/feedback.dart';
-import 'package:myrailguide/pnrstatus.dart';
-import 'package:myrailguide/trainschedule.dart';
+import 'package:myrailguide/feedback/feedback.dart';
+import 'package:myrailguide/padding.dart';
+import 'package:myrailguide/pnrstatus/pnrstatus.dart';
+import 'package:myrailguide/trainschedule/trainschedule.dart';
+import 'package:myrailguide/widgets/customappbar.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -13,47 +15,15 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    const Color bgcolor = Color(0xFFF5F5F5);
-    const Color thcolor = Color(0xFF225FDE);
     return Scaffold(
-      backgroundColor: bgcolor,
-      appBar: AppBar(
-        backgroundColor: bgcolor,
-        elevation: 0,
-        leading: null,
-        automaticallyImplyLeading: false,
-        titleSpacing: 0,
-        title: const Padding(
-          padding: EdgeInsets.only(left: 35, right: 35, top: 20),
-          child: Text(
-            "MyRailGuide",
-            style: TextStyle(
-                color: Colors.black,
-                fontFamily: "Urbanist",
-                fontSize: 36,
-                fontWeight: FontWeight.w700),
-          ),
-        ),
-        toolbarHeight: 72,
-      ),
+      appBar: buildAppBar(context, "Home", false),
       body: SingleChildScrollView(
         // physics: const NeverScrollableScrollPhysics(),
         child: SafeArea(
             child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 35),
+          padding: Paddings.maincontent,
           child: Column(
             children: [
-              const Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "Home",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontFamily: "Urbanist",
-                    fontSize: 25,
-                  ),
-                ),
-              ),
               const SizedBox(
                 height: 20,
               ),
@@ -64,7 +34,7 @@ class _HomePageState extends State<HomePage> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),
                     ),
-                    color: Colors.white,
+                    color: Theme.of(context).cardColor,
                     shadows: const [
                       BoxShadow(
                         color: Color(0x3F000000),
@@ -79,54 +49,34 @@ class _HomePageState extends State<HomePage> {
                         vertical: 25, horizontal: 25),
                     child: Column(
                       children: [
-                        const Align(
+                        Align(
                           alignment: Alignment.centerLeft,
                           child: Text(
                             "Welcome",
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontFamily: "Urbanist",
-                                fontSize: 25,
-                                fontWeight: FontWeight.w500),
+                            style: Theme.of(context).textTheme.headlineMedium,
                           ),
                         ),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 8),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8),
                           child: Align(
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              'You currently do not have any journeys planned',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 17,
-                                fontFamily: 'Urbanist',
-                                fontWeight: FontWeight.w400,
-                                height: 0,
-                                letterSpacing: 0.50,
-                              ),
-                            ),
+                                'You currently do not have any journeys planned',
+                                style:
+                                    Theme.of(context).textTheme.headlineSmall),
                           ),
                         ),
                         GestureDetector(
                           onTap: () {},
-                          child: const Row(
+                          child: Row(
                             children: [
-                              Icon(
+                              const Icon(
                                 Icons.add_circle,
                                 size: 30,
-                                color: thcolor,
                               ),
-                              Text(
-                                'Add a journey',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 17,
-                                  fontFamily: 'Urbanist',
-                                  fontWeight: FontWeight.w400,
-                                  height: 0,
-                                  letterSpacing: 0.15,
-                                ),
-                              )
+                              Text('Add a journey',
+                                  style:
+                                      Theme.of(context).textTheme.headlineSmall)
                             ],
                           ),
                         )
@@ -145,7 +95,7 @@ class _HomePageState extends State<HomePage> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),
                     ),
-                    color: Colors.white,
+                    color: Theme.of(context).cardColor,
                     shadows: const [
                       BoxShadow(
                         color: Color(0x3F000000),
@@ -181,18 +131,9 @@ class _HomePageState extends State<HomePage> {
                                   );
                                 },
                               ),
-                              const Text(
-                                'PNR\nStatus',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 13,
-                                  fontFamily: 'Urbanist',
-                                  fontWeight: FontWeight.w400,
-                                  height: 0,
-                                  letterSpacing: 0.40,
-                                ),
-                              )
+                              Text('PNR\nStatus',
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context).textTheme.labelSmall)
                             ],
                           ),
                           Column(
@@ -209,18 +150,9 @@ class _HomePageState extends State<HomePage> {
                                   );
                                 },
                               ),
-                              const Text(
-                                'Train\nSchedule',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 13,
-                                  fontFamily: 'Urbanist',
-                                  fontWeight: FontWeight.w400,
-                                  height: 0,
-                                  letterSpacing: 0.40,
-                                ),
-                              )
+                              Text('Train\nSchedule',
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context).textTheme.labelSmall)
                             ],
                           ),
                           Column(
@@ -231,18 +163,9 @@ class _HomePageState extends State<HomePage> {
                                 iconSize: 40,
                                 onPressed: () {},
                               ),
-                              const Text(
-                                'Journey\nPlanner',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 13,
-                                  fontFamily: 'Urbanist',
-                                  fontWeight: FontWeight.w400,
-                                  height: 0,
-                                  letterSpacing: 0.40,
-                                ),
-                              )
+                              Text('Journey\nPlanner',
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context).textTheme.labelSmall)
                             ],
                           ),
                           Column(
@@ -259,18 +182,9 @@ class _HomePageState extends State<HomePage> {
                                   );
                                 },
                               ),
-                              const Text(
-                                'Feedback &\nComplaints',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 13,
-                                  fontFamily: 'Urbanist',
-                                  fontWeight: FontWeight.w400,
-                                  height: 0,
-                                  letterSpacing: 0.40,
-                                ),
-                              )
+                              Text('Feedback &\nComplaints',
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context).textTheme.labelSmall)
                             ],
                           ),
                           Column(
@@ -280,18 +194,9 @@ class _HomePageState extends State<HomePage> {
                                 iconSize: 40,
                                 onPressed: () {},
                               ),
-                              const Text(
-                                'Notification\nControl',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 13,
-                                  fontFamily: 'Urbanist',
-                                  fontWeight: FontWeight.w400,
-                                  height: 0,
-                                  letterSpacing: 0.40,
-                                ),
-                              )
+                              Text('Notification\nControl',
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context).textTheme.labelSmall)
                             ],
                           ),
                           Column(
@@ -302,18 +207,9 @@ class _HomePageState extends State<HomePage> {
                                 iconSize: 40,
                                 onPressed: () {},
                               ),
-                              const Text(
-                                'Emergency\nContacts',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 13,
-                                  fontFamily: 'Urbanist',
-                                  fontWeight: FontWeight.w400,
-                                  height: 0,
-                                  letterSpacing: 0.40,
-                                ),
-                              )
+                              Text('Emergency\nContacts',
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context).textTheme.labelSmall)
                             ],
                           ),
                         ],

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:myrailguide/loading.dart';
+import 'package:myrailguide/padding.dart';
+import 'package:myrailguide/widgets/customappbar.dart';
+import 'package:myrailguide/widgets/loading.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:myrailguide/timeline.dart';
-
-const Color thcolor = Color(0xFF225FDE);
+import 'package:myrailguide/widgets/timeline.dart';
 
 class TrainResult extends StatefulWidget {
   final String? trainno;
@@ -92,77 +92,27 @@ class _TrainResultState extends State<TrainResult> {
 
   @override
   Widget build(BuildContext context) {
-    const Color bgcolor = Color(0xFFF5F5F5);
     return Scaffold(
-        backgroundColor: bgcolor,
-        appBar: AppBar(
-          backgroundColor: bgcolor,
-          elevation: 0,
-          actions: [
-            Padding(
-              padding: const EdgeInsets.only(right: 20, top: 20),
-              child: IconButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  icon: const Icon(
-                    Icons.arrow_back_ios_new_rounded,
-                    size: 30,
-                    color: Colors.black,
-                  )),
-            )
-          ],
-          leading: null,
-          automaticallyImplyLeading: false,
-          titleSpacing: 0,
-          title: const Padding(
-            padding: EdgeInsets.only(left: 35, right: 35, top: 20),
-            child: Text(
-              "MyRailGuide",
-              style: TextStyle(
-                  color: Colors.black,
-                  fontFamily: "Urbanist",
-                  fontSize: 36,
-                  fontWeight: FontWeight.w700),
+        appBar: buildAppBar(context, "Train Schedule", true),
+        body: SafeArea(
+          child: Expanded(
+            child: RefreshIndicator(
+              onRefresh: () {
+                change(0);
+                return work(Source.server);
+              },
+              color: Theme.of(context).primaryColor,
+              strokeWidth: 3,
+              child: SingleChildScrollView(
+                  child: status == 0
+                      ? const TRSLoading()
+                      : status == 1
+                          ? TrainDetails(
+                              result: res,
+                            )
+                          : const CantFindTrain()),
             ),
           ),
-          toolbarHeight: 72,
-        ),
-        body: SafeArea(
-          child: Column(children: [
-            const Padding(
-              padding: EdgeInsets.only(left: 35, right: 35, bottom: 10),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "Train Schedule",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontFamily: "Urbanist",
-                    fontSize: 25,
-                  ),
-                ),
-              ),
-            ),
-            Expanded(
-              child: RefreshIndicator(
-                onRefresh: () {
-                  change(0);
-                  return work(Source.server);
-                },
-                color: thcolor,
-                strokeWidth: 3,
-                child: SingleChildScrollView(
-                    child: status == 0
-                        ? const TRSLoading()
-                        : status == 1
-                            ? TrainDetails(
-                                result: res,
-                              )
-                            : const CantFindTrain()),
-              ),
-            )
-          ]),
         ));
   }
 }
@@ -184,12 +134,12 @@ class _TrainDetailsState extends State<TrainDetails> {
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 35),
+            padding: Paddings.maincontent,
             child: Container(
               width: double.infinity,
               // height: 120,
               decoration: ShapeDecoration(
-                  color: const Color(0xFF225FDE),
+                  color: Theme.of(context).primaryColor,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15),
                   ),
@@ -400,41 +350,37 @@ class CantFindTrain extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(
-          height: MediaQuery.of(context).size.height / 2 - 280,
-        ),
-        Image.asset(
-          "assets/images/no-results.png",
-          width: 140,
-          height: 140,
-        ),
-        const Padding(
-          padding: EdgeInsets.only(top: 30.0, bottom: 5),
-          child: Text(
-            "No results found!",
-            style: TextStyle(
-                color: Colors.black,
-                fontFamily: "Urbanist",
-                fontSize: 26,
-                fontWeight: FontWeight.w600),
-            textAlign: TextAlign.center,
+    return Center(
+      child: Column(
+        children: [
+          SizedBox(
+            height: MediaQuery.of(context).size.height / 2 - 280,
           ),
-        ),
-        const Padding(
-          padding: EdgeInsets.symmetric(vertical: 5.0),
-          child: Text(
-            "Try checking the entered train number.",
-            style: TextStyle(
-                color: Colors.black,
-                fontFamily: "Urbanist",
-                fontSize: 18,
-                fontWeight: FontWeight.w500),
-            textAlign: TextAlign.center,
+          Image.asset(
+            "assets/images/no-results.png",
+            width: 140,
+            height: 140,
           ),
-        ),
-      ],
+          Padding(
+            padding: EdgeInsets.only(top: 30.0, bottom: 5),
+            child: Text(
+              "No results found!",
+              style: Theme.of(context)
+                  .textTheme
+                  .titleMedium!
+                  .copyWith(fontWeight: FontWeight.bold),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 5.0),
+            child: Text(
+              "Try checking the entered train number.",
+              style: Theme.of(context).textTheme.titleSmall,
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
