@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:myrailguide/home/nav.dart';
+import 'package:myrailguide/entrycheck.dart';
 import 'package:myrailguide/theme.dart';
 import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -26,7 +26,7 @@ class _HomeState extends State<Home> {
       theme: lightTheme,
       darkTheme: darkTheme,
       debugShowCheckedModeBanner: false,
-      home: const Navbar(),
+      home: const EntryCheck(),
     );
   }
 }

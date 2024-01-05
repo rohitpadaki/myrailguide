@@ -280,7 +280,7 @@ final ThemeData darkTheme = ThemeData(
   primaryColorDark: const Color(0xff143985),
   canvasColor: const Color(0xFF1C1B1F),
   scaffoldBackgroundColor: const Color(0xFF1C1B1F),
-  cardColor: const Color(0xff000000),
+  cardColor: const Color(0xff363636),
   dividerColor: const Color(0xffffffff),
   highlightColor: const Color(0x66bcbcbc),
   splashColor: const Color(0x66c8c8c8),

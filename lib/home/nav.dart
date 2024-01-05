@@ -1,12 +1,14 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:myrailguide/home/homepage.dart';
 import 'package:myrailguide/home/mynav.dart';
 import 'package:myrailguide/home/profile.dart';
 import 'package:myrailguide/padding.dart';
-import 'package:myrailguide/trainschedule/trainschedule.dart';
+import 'package:myrailguide/planner/addjourney.dart';
 
 class Navbar extends StatefulWidget {
-  const Navbar({super.key});
+  final User? user;
+  const Navbar({super.key, this.user});
 
   @override
   State<Navbar> createState() => _NavbarState();
@@ -22,6 +24,7 @@ class _NavbarState extends State<Navbar> {
   int currentPageIndex = 0;
   @override
   Widget build(BuildContext context) {
+    User? currentUser = widget.user;
     // print(currentPageIndex);
     return Scaffold(
       // backgroundColor: Colors.cyan,
@@ -33,10 +36,15 @@ class _NavbarState extends State<Navbar> {
               currentPageIndex = i;
             });
           },
-          children: const [
-            HomePage(),
-            TrainSchedule(),
-            ProfilePage(),
+          children: [
+            HomePage(user: currentUser),
+            JourneyPlanner(
+              backbutton: false,
+              user: currentUser,
+            ),
+            ProfilePage(
+              user: currentUser,
+            ),
           ]),
       bottomNavigationBar: Padding(
         padding: Paddings.doublepad,

@@ -122,7 +122,7 @@ class _PNRResultState extends State<PNRResult> {
                           res: res,
                           pnrno: widget.pnrno,
                         )
-                      : const Text("NO PNR")),
+                      : const CantFindPNR()),
         ));
   }
 }
@@ -392,6 +392,46 @@ class _PNRResPageState extends State<PNRResPage> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class CantFindPNR extends StatelessWidget {
+  const CantFindPNR({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        children: [
+          SizedBox(
+            height: MediaQuery.of(context).size.height / 2 - 280,
+          ),
+          Image.asset(
+            "assets/images/no-results.png",
+            width: 140,
+            height: 140,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 30.0, bottom: 5),
+            child: Text(
+              "No results found!",
+              style: Theme.of(context)
+                  .textTheme
+                  .titleMedium!
+                  .copyWith(fontWeight: FontWeight.bold),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 5.0),
+            child: Text(
+              "Try checking the entered PNR number.",
+              style: Theme.of(context).textTheme.titleSmall,
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ],
       ),
     );
   }

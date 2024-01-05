@@ -362,7 +362,7 @@ class CantFindTrain extends StatelessWidget {
             height: 140,
           ),
           Padding(
-            padding: EdgeInsets.only(top: 30.0, bottom: 5),
+            padding: const EdgeInsets.only(top: 30.0, bottom: 5),
             child: Text(
               "No results found!",
               style: Theme.of(context)
@@ -372,7 +372,7 @@ class CantFindTrain extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: EdgeInsets.symmetric(vertical: 5.0),
+            padding: const EdgeInsets.symmetric(vertical: 5.0),
             child: Text(
               "Try checking the entered train number.",
               style: Theme.of(context).textTheme.titleSmall,

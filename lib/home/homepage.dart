@@ -1,18 +1,44 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:localstore/localstore.dart';
+import 'package:myrailguide/emergency/emergency_contacts.dart';
 import 'package:myrailguide/feedback/feedback.dart';
+import 'package:myrailguide/notification/notificationpage.dart';
 import 'package:myrailguide/padding.dart';
+import 'package:myrailguide/planner/addjourney.dart';
 import 'package:myrailguide/pnrstatus/pnrstatus.dart';
 import 'package:myrailguide/trainschedule/trainschedule.dart';
 import 'package:myrailguide/widgets/customappbar.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final User? user;
+  const HomePage({super.key, this.user});
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+  int listCount = 0;
+  int status = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    getDetails();
+  }
+
+  getDetails() async {
+    await Localstore.instance.collection(widget.user!.uid).get().then(
+      (value) {
+        if (value != null) listCount = value.length;
+      },
+    );
+    setState(() {
+      status = 1;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,13 +87,22 @@ class _HomePageState extends State<HomePage> {
                           child: Align(
                             alignment: Alignment.centerLeft,
                             child: Text(
-                                'You currently do not have any journeys planned',
+                                (listCount == 0)
+                                    ? 'You currently do not have any journeys planned'
+                                    : 'You have $listCount Journey(s) Planned',
                                 style:
                                     Theme.of(context).textTheme.headlineSmall),
                           ),
                         ),
                         GestureDetector(
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      JourneyPlanner(user: widget.user)),
+                            );
+                          },
                           child: Row(
                             children: [
                               const Icon(
@@ -161,7 +196,14 @@ class _HomePageState extends State<HomePage> {
                                 icon: Image.asset(
                                     'assets/images/destination.png'),
                                 iconSize: 40,
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            JourneyPlanner(user: widget.user)),
+                                  );
+                                },
                               ),
                               Text('Journey\nPlanner',
                                   textAlign: TextAlign.center,
@@ -192,7 +234,14 @@ class _HomePageState extends State<HomePage> {
                               IconButton(
                                 icon: Image.asset('assets/images/bell.png'),
                                 iconSize: 40,
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const NotificationPage1()),
+                                  );
+                                },
                               ),
                               Text('Notification\nControl',
                                   textAlign: TextAlign.center,
@@ -205,7 +254,14 @@ class _HomePageState extends State<HomePage> {
                                 icon: Image.asset(
                                     'assets/images/emergency-call.png'),
                                 iconSize: 40,
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const EmergencyContacts()),
+                                  );
+                                },
                               ),
                               Text('Emergency\nContacts',
                                   textAlign: TextAlign.center,
