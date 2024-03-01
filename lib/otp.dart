@@ -32,24 +32,21 @@ class _MyotpState extends State<Myotp> {
     final defaultPinTheme = PinTheme(
       width: 56,
       height: 56,
-      textStyle: const TextStyle(
-          fontSize: 20,
-          color: Color.fromRGBO(30, 60, 87, 1),
-          fontWeight: FontWeight.w600),
+      textStyle: Theme.of(context).textTheme.headlineMedium,
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.black26),
+        border: Border.all(color: Theme.of(context).splashColor),
         borderRadius: BorderRadius.circular(20),
       ),
     );
 
     final focusedPinTheme = defaultPinTheme.copyDecorationWith(
-      border: Border.all(color: const Color.fromRGBO(114, 178, 238, 1)),
+      border: Border.all(color: Theme.of(context).primaryColor),
       borderRadius: BorderRadius.circular(20),
     );
 
     final submittedPinTheme = defaultPinTheme.copyWith(
       decoration: defaultPinTheme.decoration?.copyWith(
-        color: const Color.fromRGBO(234, 239, 243, 1),
+        border: Border.all(color: Theme.of(context).dividerColor),
       ),
     );
     var code = "";

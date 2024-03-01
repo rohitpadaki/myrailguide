@@ -5,6 +5,7 @@ import 'package:localstore/localstore.dart';
 import 'package:myrailguide/padding.dart';
 import 'package:myrailguide/pnrstatus/pnrresult.dart';
 import 'package:myrailguide/widgets/customappbar.dart';
+import 'package:myrailguide/widgets/custombutton.dart';
 import 'package:quickalert/quickalert.dart';
 
 class JourneyPlanner extends StatefulWidget {
@@ -33,6 +34,8 @@ class _JourneyPlannerState extends State<JourneyPlanner> {
         value.forEach((key, data) {
           // Create a DynamicWidget for each document and add it to the list
           DynamicWidget dynamicWidget = DynamicWidget(
+            callback: updateState,
+            user: widget.user,
             pnr: data['pnrno'],
             train: data['train']['train'],
             to: data['dst']['station'],
@@ -44,6 +47,13 @@ class _JourneyPlannerState extends State<JourneyPlanner> {
       setState(() {});
     });
     // Localstore.instance.collection(widget.user!.uid).delete();
+  }
+
+  void updateState() {
+    setState(() {
+      listDynamic = [];
+      fetchLocalStoreData();
+    });
   }
 
   @override
@@ -66,18 +76,26 @@ class _JourneyPlannerState extends State<JourneyPlanner> {
                     .titleMedium!
                     .copyWith(fontWeight: FontWeight.bold, color: Colors.black),
                 content: TextField(
+                  style: Theme.of(context)
+                      .textTheme
+                      .headlineMedium
+                      ?.copyWith(color: Colors.black),
                   autofocus: true,
                   controller: pnr,
                   keyboardType: TextInputType.phone,
                   onChanged: (value) {
                     pnrno = value;
                   },
-                  decoration:
-                      const InputDecoration(hintText: 'Enter your PNR No.'),
+                  decoration: const InputDecoration(
+                    hintText: 'Enter your PNR No.',
+                  ),
                 ),
                 actions: [
                   TextButton(
-                      onPressed: submit,
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        submit();
+                      },
                       child: const Text(
                         "SUBMIT",
                         style: TextStyle(fontFamily: "Urbanist"),
@@ -164,16 +182,24 @@ class _JourneyPlannerState extends State<JourneyPlanner> {
       Map<String, dynamic>? res = await fetchPNR(pnrno, Source.server);
       if (res != null) {
         // Add the new PNR to the local store
+        for (var item in listDynamic) {
+          if (item.pnr == pnrno) {
+            return;
+          }
+        }
         Localstore.instance.collection(widget.user!.uid).doc(pnrno).set(res);
         // Create a new DynamicWidget for the new PNR and add it to listDynamic
         DynamicWidget dynamicWidget = DynamicWidget(
+          callback: updateState,
           pnr: pnrno,
           train: res['train']['train'],
           to: res['dst']['station'],
           from: res['src']['station'],
+          user: widget.user,
         );
-        listDynamic.add(dynamicWidget);
-        setState(() {});
+        setState(() {
+          listDynamic.add(dynamicWidget);
+        });
       }
       // showAlert("PNR Number Consists of 10 Digits", QuickAlertType.error);
     }
@@ -188,20 +214,23 @@ class _JourneyPlannerState extends State<JourneyPlanner> {
             (widget.backbutton == null) ? true : false),
         floatingActionButton: (widget.backbutton != null)
             ? null
-            : FloatingActionButton(
-                onPressed: () {
-                  openDialog();
-                },
-                backgroundColor: const Color(0xFF225FDE),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15)),
-                child: Ink(
-                  width: 60,
-                  height: 60,
-                  child: const Icon(
-                    Icons.add,
-                    size: 40,
-                    color: Colors.white,
+            : Padding(
+                padding: const EdgeInsets.all(10),
+                child: FloatingActionButton(
+                  onPressed: () {
+                    openDialog();
+                  },
+                  backgroundColor: const Color(0xFF225FDE),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15)),
+                  child: Ink(
+                    width: 60,
+                    height: 60,
+                    child: const Icon(
+                      Icons.add,
+                      size: 40,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),
@@ -294,12 +323,16 @@ class _JourneyPlannerState extends State<JourneyPlanner> {
 }
 
 class DynamicWidget extends StatelessWidget {
+  final VoidCallback callback;
+  final User? user;
   final String from;
   final String to;
   final String train;
   final String pnr;
   const DynamicWidget(
       {super.key,
+      this.user,
+      required this.callback,
       required this.from,
       required this.to,
       required this.pnr,
@@ -369,6 +402,18 @@ class DynamicWidget extends StatelessWidget {
                     )
                   ],
                 ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 22, right: 22, bottom: 25),
+                child: DangerButton(
+                    text: "REMOVE",
+                    onTap: () {
+                      Localstore.instance
+                          .collection(user!.uid)
+                          .doc(pnr)
+                          .delete();
+                      callback();
+                    }),
               )
             ],
           ),

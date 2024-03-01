@@ -83,3 +83,92 @@ class PNRLoading extends StatelessWidget {
     );
   }
 }
+
+class HomeLoading extends StatelessWidget {
+  const HomeLoading({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: Paddings.maincontent,
+      child: Shimmer.fromColors(
+          baseColor: Theme.of(context).splashColor,
+          highlightColor: Theme.of(context).highlightColor,
+          enabled: true,
+          child: const SingleChildScrollView(
+            physics: NeverScrollableScrollPhysics(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(bottom: 15.0, top: 40),
+                  child: BannerPlaceholder(
+                    height: 160,
+                    width: double.infinity,
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(bottom: 15.0, top: 15),
+                  child: BannerPlaceholder(
+                    height: 325,
+                    width: double.infinity,
+                  ),
+                ),
+              ],
+            ),
+          )),
+    );
+  }
+}
+
+class ProfileLoading extends StatelessWidget {
+  const ProfileLoading({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: Paddings.maincontent,
+      child: Shimmer.fromColors(
+          baseColor: Theme.of(context).splashColor,
+          highlightColor: Theme.of(context).highlightColor,
+          enabled: true,
+          child: const SingleChildScrollView(
+            physics: NeverScrollableScrollPhysics(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(bottom: 15.0, top: 30),
+                  child: CirclePlaceHolder(
+                    height: 160,
+                    width: double.infinity,
+                  ),
+                ),
+                Center(
+                  child: BannerPlaceholder(
+                    height: 35,
+                    width: 150,
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(bottom: 5.0, top: 0),
+                  child: BannerPlaceholder(
+                    height: 52,
+                    width: double.infinity,
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(bottom: 6.0, top: 0),
+                  child: BannerPlaceholder(
+                    height: 52,
+                    width: double.infinity,
+                  ),
+                ),
+              ],
+            ),
+          )),
+    );
+  }
+}

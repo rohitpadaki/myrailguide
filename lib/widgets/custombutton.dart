@@ -58,3 +58,32 @@ class SecondaryButton extends StatelessWidget {
     );
   }
 }
+
+class DangerButton extends StatelessWidget {
+  final String text;
+  final VoidCallback onTap;
+  const DangerButton({super.key, required this.text, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialButton(
+      color: const Color.fromARGB(255, 255, 75, 75),
+      onPressed: onTap,
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: Text(
+        text,
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 15,
+          fontFamily: 'Urbanist',
+          fontWeight: FontWeight.w500,
+          height: 0,
+          letterSpacing: 1.25,
+        ),
+      ),
+    );
+  }
+}

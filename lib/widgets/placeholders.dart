@@ -13,8 +13,33 @@ class BannerPlaceholder extends StatelessWidget {
       height: height,
       margin: const EdgeInsets.symmetric(vertical: 10),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12.0),
+        borderRadius: BorderRadius.circular(15.0),
         color: Colors.white,
+      ),
+    );
+  }
+}
+
+class CirclePlaceHolder extends StatelessWidget {
+  final double height;
+  final double width;
+  const CirclePlaceHolder({Key? key, required this.height, required this.width})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    // return Container(
+    //   width: width,
+    //   height: height,
+    //   margin: const EdgeInsets.symmetric(vertical: 10),
+    //   decoration: BoxDecoration(
+    //     borderRadius: BorderRadius.circular(100),
+    //     color: Colors.white,
+    //   ),
+    // );
+    return const Center(
+      child: CircleAvatar(
+        radius: 105,
       ),
     );
   }
@@ -45,7 +70,7 @@ class ContentPlaceholder extends StatelessWidget {
             width: 96.0,
             height: 72.0,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12.0),
+              borderRadius: BorderRadius.circular(15.0),
               color: Colors.white,
             ),
           ),

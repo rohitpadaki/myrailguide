@@ -95,23 +95,27 @@ class _TrainResultState extends State<TrainResult> {
     return Scaffold(
         appBar: buildAppBar(context, "Train Schedule", true),
         body: SafeArea(
-          child: Expanded(
-            child: RefreshIndicator(
-              onRefresh: () {
-                change(0);
-                return work(Source.server);
-              },
-              color: Theme.of(context).primaryColor,
-              strokeWidth: 3,
-              child: SingleChildScrollView(
-                  child: status == 0
-                      ? const TRSLoading()
-                      : status == 1
-                          ? TrainDetails(
-                              result: res,
-                            )
-                          : const CantFindTrain()),
-            ),
+          child: Column(
+            children: [
+              Expanded(
+                child: RefreshIndicator(
+                  onRefresh: () {
+                    change(0);
+                    return work(Source.server);
+                  },
+                  color: Theme.of(context).primaryColor,
+                  strokeWidth: 3,
+                  child: SingleChildScrollView(
+                      child: status == 0
+                          ? const TRSLoading()
+                          : status == 1
+                              ? TrainDetails(
+                                  result: res,
+                                )
+                              : const CantFindTrain()),
+                ),
+              ),
+            ],
           ),
         ));
   }

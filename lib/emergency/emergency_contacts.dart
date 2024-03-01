@@ -25,7 +25,15 @@ class _EmergencyContactsState extends State<EmergencyContacts> {
   static const String pho1 = "01";
   static const String pho2 = "02";
   void showAlert(String tex, QuickAlertType quickAlertType) {
-    QuickAlert.show(context: context, type: quickAlertType, text: tex);
+    // QuickAlert.show(context: context, type: quickAlertType, text: tex);
+    QuickAlert.show(
+      context: context,
+      type: QuickAlertType.error,
+      title: "Invalid Contact",
+      text: tex,
+      autoCloseDuration: const Duration(milliseconds: 3000),
+      showConfirmBtn: false,
+    );
   }
 
   TextEditingController phn = TextEditingController();
@@ -56,8 +64,18 @@ class _EmergencyContactsState extends State<EmergencyContacts> {
     showDialog(
         context: context,
         builder: (context) => AlertDialog(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15)),
                 title: const Text("Phone Number"),
+                titleTextStyle: Theme.of(context)
+                    .textTheme
+                    .titleMedium!
+                    .copyWith(fontWeight: FontWeight.bold, color: Colors.black),
                 content: TextField(
+                  style: Theme.of(context)
+                      .textTheme
+                      .headlineMedium
+                      ?.copyWith(color: Colors.black),
                   autofocus: true,
                   controller: phn,
                   keyboardType: TextInputType.phone,
@@ -66,19 +84,40 @@ class _EmergencyContactsState extends State<EmergencyContacts> {
                     var prefs = await SharedPreferences.getInstance();
                     prefs.setString(pho1, phone);
                   },
-                  decoration:
-                      const InputDecoration(hintText: 'Enter your Phone No.'),
+                  decoration: const InputDecoration(
+                    focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black)),
+                    labelText: 'Enter your Phone No.',
+                  ),
                 ),
                 actions: [
-                  TextButton(onPressed: submit, child: const Text("SUBMIT"))
+                  TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        submit();
+                      },
+                      child: const Text(
+                        "SUBMIT",
+                        style: TextStyle(fontFamily: "Urbanist"),
+                      ))
                 ]));
   }
 
   Future openDialog1() async => showDialog(
       context: context,
       builder: (context) => AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15)),
               title: const Text("Phone Number"),
+              titleTextStyle: Theme.of(context)
+                  .textTheme
+                  .titleMedium!
+                  .copyWith(fontWeight: FontWeight.bold, color: Colors.black),
               content: TextField(
+                style: Theme.of(context)
+                    .textTheme
+                    .headlineMedium
+                    ?.copyWith(color: Colors.black),
                 autofocus: true,
                 controller: phn1,
                 keyboardType: TextInputType.phone,
@@ -87,12 +126,24 @@ class _EmergencyContactsState extends State<EmergencyContacts> {
                   var sprefs = await SharedPreferences.getInstance();
                   sprefs.setString(pho2, phone1);
                 },
-                decoration:
-                    const InputDecoration(hintText: 'Enter your Phone No.'),
+                decoration: const InputDecoration(
+                  focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black)),
+                  labelText: 'Enter your Phone No.',
+                ),
               ),
               actions: [
-                TextButton(onPressed: submit, child: const Text("SUBMIT"))
+                TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      submit();
+                    },
+                    child: const Text(
+                      "SUBMIT",
+                      style: TextStyle(fontFamily: "Urbanist"),
+                    ))
               ]));
+
   void submit() {
     Navigator.of(context).pop();
   }
