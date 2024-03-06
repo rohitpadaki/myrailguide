@@ -19,7 +19,9 @@ class _FeedbackCompState extends State<FeedbackComp> {
   @override
   Widget build(BuildContext context) {
     TextEditingController fbcontroller = TextEditingController();
-    Future<void> submitFeedback(fbcoll, fbstring) {
+
+    Future<void> submitFeedback(fbstring) {
+      CollectionReference fbcoll = firestore.collection('feedback');
       return fbcoll.add({'feedback': fbstring});
     }
 
@@ -67,10 +69,8 @@ class _FeedbackCompState extends State<FeedbackComp> {
                   padding: const EdgeInsets.symmetric(vertical: 7.0),
                   child: PrimaryButton(
                     onTap: () {
-                      CollectionReference fbcoll =
-                          firestore.collection('feedback');
                       if (fbcontroller.text.trim() != '') {
-                        submitFeedback(fbcoll, fbcontroller.text);
+                        submitFeedback(fbcontroller.text);
                         QuickAlert.show(
                           context: context,
                           type: QuickAlertType.success,

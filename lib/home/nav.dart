@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:myrailguide/chatbot/chatbot.dart';
 import 'package:myrailguide/home/homepage.dart';
 import 'package:myrailguide/home/mynav.dart';
 import 'package:myrailguide/home/profile.dart';
@@ -38,6 +39,7 @@ class _NavbarState extends State<Navbar> {
           },
           children: [
             HomePage(user: currentUser),
+            ChatBot(),
             JourneyPlanner(
               backbutton: false,
               user: currentUser,

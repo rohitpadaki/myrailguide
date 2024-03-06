@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 String fontfamily = "Urbanist";
 
 final ThemeData lightTheme = ThemeData(
+  useMaterial3: false,
   appBarTheme: const AppBarTheme(
       backgroundColor: Color(0xFFF5F5F5),
       elevation: 0,
@@ -270,6 +271,7 @@ final ThemeData lightTheme = ThemeData(
 );
 
 final ThemeData darkTheme = ThemeData(
+  useMaterial3: false,
   appBarTheme: const AppBarTheme(
       backgroundColor: Color(0xFF1C1B1F),
       elevation: 0,
