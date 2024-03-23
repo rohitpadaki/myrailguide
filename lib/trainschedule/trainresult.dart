@@ -92,32 +92,7 @@ class _TrainResultState extends State<TrainResult> {
 
   @override
   Widget build(BuildContext context) {
-<<<<<<< HEAD
-    return Scaffold(
-        appBar: buildAppBar(context, "Train Schedule", true),
-        body: SafeArea(
-          child: Column(
-            children: [
-              Expanded(
-                child: RefreshIndicator(
-                  onRefresh: () {
-                    change(0);
-                    return work(Source.server);
-                  },
-                  color: Theme.of(context).primaryColor,
-                  strokeWidth: 3,
-                  child: SingleChildScrollView(
-                      child: status == 0
-                          ? const TRSLoading()
-                          : status == 1
-                              ? TrainDetails(
-                                  result: res,
-                                )
-                              : const CantFindTrain()),
-                ),
-              ),
-            ],
-=======
+
 return Scaffold(
   appBar: buildAppBar(context, "Train Schedule", true),
   body: SafeArea(
@@ -140,7 +115,6 @@ return Scaffold(
                         )
                       : const CantFindTrain(),
             ),
->>>>>>> b77f95df1592f9664f17eb70f072f40a35663ac3
           ),
         ),
       ],
