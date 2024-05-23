@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:myrailguide/auth.dart';
 import 'package:myrailguide/padding.dart';
 import 'package:myrailguide/widgets/customappbar.dart';
 import 'package:myrailguide/widgets/loading.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:myrailguide/widgets/timeline.dart';
+import 'package:mongo_dart/mongo_dart.dart' as mongo;
 
 class TrainResult extends StatefulWidget {
   final String? trainno;
@@ -18,55 +20,25 @@ class _TrainResultState extends State<TrainResult> {
   Map<String, dynamic>? res;
 
   Future<Map<String, dynamic>?> fetchData(trainno, source) async {
-    try {
-      var db = FirebaseFirestore.instance;
-      DocumentSnapshot<Map<String, dynamic>>? document;
-      try {
-        document = await db
-            .collection('train')
-            .doc(trainno)
-            .get(GetOptions(source: source));
-      } on Exception {
-        document = await db
-            .collection('train')
-            .doc(trainno)
-            .get(const GetOptions(source: Source.server));
-      }
-      String trainName = document['trainname'];
-      List<bool> week = List<bool>.from(document['week']);
-      String trainNo = document['trainno'];
-      var sch = document['schedule'];
-
-      DocumentReference<Map<String, dynamic>> fromRef = document['from'];
-      DocumentReference<Map<String, dynamic>> toRef = document['to'];
-
-      DocumentSnapshot<Map<String, dynamic>> fromSnapshot = await fromRef.get();
-      Map<String, dynamic> fromData = fromSnapshot.data()!;
-
-      DocumentSnapshot<Map<String, dynamic>> toSnapshot = await toRef.get();
-      Map<String, dynamic> toData = toSnapshot.data()!;
-      List<dynamic> schedules = [];
-      for (var i in sch) {
-        DocumentReference<Map<String, dynamic>> stat = i['station'];
-        Map<String, dynamic> time = {"time": i['time']};
-        DocumentSnapshot<Map<String, dynamic>> schSnap = await stat.get();
-
-        Map<String, dynamic> schData = schSnap.data()!;
-        schData.addAll(time);
-        schedules.add(schData);
-      }
-
-      return {
-        'trainName': trainName,
-        'week': week,
-        'trainNo': trainNo,
-        'from': fromData,
-        'to': toData,
-        'schedule': schedules
-      };
-    } catch (e) {
-      return null;
-    }
+    var db = await mongo.Db.create(Environment.mongoServerUrl);
+    await db.open();
+    res = await db
+        .collection('train')
+        .findOne(mongo.where.eq('trainno', trainno));
+    String trainName = res?['trainname'];
+    List<bool> week = List<bool>.from(res?['week']);
+    String trainNo = res?['trainno'];
+    List<dynamic> schedules = res?['schedule'];
+    var fromData = res?['from'];
+    var toData = res?['to'];
+    return ({
+      'trainName': trainName,
+      'week': week,
+      'trainNo': trainNo,
+      'from': fromData,
+      'to': toData,
+      'schedule': schedules
+    });
   }
 
   change(int num) {
@@ -92,36 +64,34 @@ class _TrainResultState extends State<TrainResult> {
 
   @override
   Widget build(BuildContext context) {
-
-return Scaffold(
-  appBar: buildAppBar(context, "Train Schedule", true),
-  body: SafeArea(
-    child: Column(
-      children: [
-        Expanded(
-          child: RefreshIndicator(
-            onRefresh: () {
-              change(0);
-              return work(Source.server);
-            },
-            color: Theme.of(context).primaryColor,
-            strokeWidth: 3,
-            child: SingleChildScrollView(
-              child: status == 0
-                  ? const TRSLoading()
-                  : status == 1
-                      ? TrainDetails(
-                          result: res,
-                        )
-                      : const CantFindTrain(),
+    return Scaffold(
+      appBar: buildAppBar(context, "Train Schedule", true),
+      body: SafeArea(
+        child: Column(
+          children: [
+            Expanded(
+              child: RefreshIndicator(
+                onRefresh: () {
+                  change(0);
+                  return work(Source.server);
+                },
+                color: Theme.of(context).primaryColor,
+                strokeWidth: 3,
+                child: SingleChildScrollView(
+                  child: status == 0
+                      ? const TRSLoading()
+                      : status == 1
+                          ? TrainDetails(
+                              result: res,
+                            )
+                          : const CantFindTrain(),
+                ),
+              ),
             ),
-          ),
+          ],
         ),
-      ],
-    ),
-  ),
-);
-
+      ),
+    );
   }
 }
 
@@ -136,7 +106,6 @@ class TrainDetails extends StatefulWidget {
 class _TrainDetailsState extends State<TrainDetails> {
   @override
   Widget build(BuildContext context) {
-    // print(widget.result['from']);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 25.0),
       child: Column(
@@ -186,7 +155,7 @@ class _TrainDetailsState extends State<TrainDetails> {
                         Expanded(
                           child: Text(
                             // "Hello",
-                            '${widget.result?['from']['station']} \n(${widget.result?['from']['sid']})',
+                            '${widget.result?['from']["station"]} \n(${widget.result?['from']['sid']})',
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 16,

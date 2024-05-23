@@ -1,13 +1,16 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:localstore/localstore.dart';
+import 'package:myrailguide/chatbot/chatbot.dart';
 import 'package:myrailguide/emergency/emergency_contacts.dart';
 import 'package:myrailguide/feedback/feedback.dart';
 import 'package:myrailguide/notification/notificationpage.dart';
 import 'package:myrailguide/padding.dart';
 import 'package:myrailguide/planner/addjourney.dart';
 import 'package:myrailguide/pnrstatus/pnrstatus.dart';
+import 'package:myrailguide/qrcode/qr_form.dart';
 import 'package:myrailguide/trainschedule/trainschedule.dart';
+import 'package:myrailguide/voice_search/voice.dart';
 import 'package:myrailguide/widgets/customappbar.dart';
 import 'package:myrailguide/widgets/loading.dart';
 
@@ -59,11 +62,8 @@ class _HomePageState extends State<HomePage> {
                 padding: Paddings.maincontent,
                 child: Column(
                   children: [
-                    const SizedBox(
-                      height: 20,
-                    ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 28),
+                      padding: const EdgeInsets.only(top: 16),
                       child: Container(
                         decoration: ShapeDecoration(
                           shape: RoundedRectangleBorder(
@@ -134,9 +134,6 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                     ),
-                    const SizedBox(
-                      height: 20,
-                    ),
                     Padding(
                       padding: const EdgeInsets.only(top: 28),
                       child: Container(
@@ -157,7 +154,7 @@ class _HomePageState extends State<HomePage> {
                           color: Colors.transparent,
                           shadowColor: Colors.transparent,
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 40.0),
+                            padding: const EdgeInsets.symmetric(vertical: 30.0),
                             child: GridView(
                               gridDelegate:
                                   const SliverGridDelegateWithFixedCrossAxisCount(
@@ -293,6 +290,77 @@ class _HomePageState extends State<HomePage> {
                                       },
                                     ),
                                     Text('Emergency\nContacts',
+                                        textAlign: TextAlign.center,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .labelSmall),
+                                  ],
+                                ),
+                                Column(
+                                  children: [
+                                    IconButton(
+                                      icon: Image.asset(
+                                        'assets/images/qr-code.png',
+                                        color: Color(0xFF151515 -
+                                            Theme.of(context)
+                                                .scaffoldBackgroundColor
+                                                .value +
+                                            0xFF000000),
+                                      ),
+                                      iconSize: 40,
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => QRCode1()),
+                                        );
+                                      },
+                                    ),
+                                    Text('QR Code Genertion',
+                                        textAlign: TextAlign.center,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .labelSmall),
+                                  ],
+                                ),
+                                Column(
+                                  children: [
+                                    IconButton(
+                                      icon:
+                                          Image.asset('assets/images/mic.png'),
+                                      iconSize: 40,
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const VoiceRecognition()),
+                                        );
+                                      },
+                                    ),
+                                    Text('Voice Search',
+                                        textAlign: TextAlign.center,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .labelSmall),
+                                  ],
+                                ),
+                                Column(
+                                  children: [
+                                    IconButton(
+                                      icon: Image.asset(
+                                          'assets/images/chat-box.png'),
+                                      iconSize: 40,
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const Chatbot()),
+                                        );
+                                      },
+                                    ),
+                                    Text('AI Chatbot',
                                         textAlign: TextAlign.center,
                                         style: Theme.of(context)
                                             .textTheme

@@ -37,7 +37,6 @@ dependencies:
   cupertino_icons: ^1.0.2
   shimmer: ^3.0.0
   firebase_core: ^2.23.0
-  firebase: ^9.0.3
   cloud_firestore: ^4.13.2
   timeline_tile: ^2.0.0
   quickalert: ^1.0.2
@@ -50,6 +49,14 @@ dependencies:
   flutter_native_splash: ^2.3.7
   image_picker: ^1.0.7
   firebase_storage: ^11.6.0
+  local_auth: ^2.2.0
+  google_generative_ai: ^0.4.0
+  flutter_markdown: ^0.7.1
+  speech_to_text: ^6.6.1
+  avatar_glow: ^3.0.1
+  mongo_dart: ^0.10.2
+  flutter_tts: ^4.0.2
+  qr_flutter: ^4.1.0
 
 dev_dependencies:
   flutter_test:

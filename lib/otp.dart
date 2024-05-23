@@ -53,17 +53,22 @@ class _MyotpState extends State<Myotp> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(
-            Icons.arrow_back_ios_rounded,
-            color: Colors.black,
-          ),
-        ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 20, top: 20),
+            child: IconButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                icon: Icon(
+                  Icons.arrow_back_ios_new_rounded,
+                  size: 30,
+                  color: Theme.of(context).dividerColor,
+                )),
+          )
+        ],
+        leading: null,
+        automaticallyImplyLeading: false,
       ),
       body: SafeArea(
         child: Container(

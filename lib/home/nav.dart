@@ -1,10 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:myrailguide/booking/booking.dart';
 import 'package:myrailguide/home/homepage.dart';
 import 'package:myrailguide/home/mynav.dart';
 import 'package:myrailguide/home/profile.dart';
 import 'package:myrailguide/padding.dart';
-import 'package:myrailguide/planner/addjourney.dart';
 
 class Navbar extends StatefulWidget {
   final User? user;
@@ -38,10 +38,11 @@ class _NavbarState extends State<Navbar> {
           },
           children: [
             HomePage(user: currentUser),
-            JourneyPlanner(
-              backbutton: false,
-              user: currentUser,
-            ),
+            // JourneyPlanner(
+            //   backbutton: false,
+            //   user: currentUser,
+            // ),
+            const Booking(),
             ProfilePage(
               user: currentUser,
             ),

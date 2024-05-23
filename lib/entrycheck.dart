@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:myrailguide/home/nav.dart';
+import 'package:myrailguide/bioauth/biometric.dart';
 import 'package:myrailguide/phone.dart';
 
 class EntryCheck extends StatelessWidget {
@@ -13,8 +13,8 @@ class EntryCheck extends StatelessWidget {
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return Navbar(
-            user: snapshot.data,
+          return Biometric(
+            userData: snapshot.data,
           );
         } else {
           return const Myphone();

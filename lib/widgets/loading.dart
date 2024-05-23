@@ -102,16 +102,16 @@ class HomeLoading extends StatelessWidget {
               mainAxisSize: MainAxisSize.max,
               children: [
                 Padding(
-                  padding: EdgeInsets.only(bottom: 15.0, top: 40),
+                  padding: EdgeInsets.only(bottom: 10, top: 6),
                   child: BannerPlaceholder(
-                    height: 160,
+                    height: 164,
                     width: double.infinity,
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(bottom: 15.0, top: 15),
+                  padding: EdgeInsets.only(bottom: 15.0, top: 0),
                   child: BannerPlaceholder(
-                    height: 325,
+                    height: 410,
                     width: double.infinity,
                   ),
                 ),
@@ -163,6 +163,90 @@ class ProfileLoading extends StatelessWidget {
                   padding: EdgeInsets.only(bottom: 6.0, top: 0),
                   child: BannerPlaceholder(
                     height: 52,
+                    width: double.infinity,
+                  ),
+                ),
+              ],
+            ),
+          )),
+    );
+  }
+}
+
+class QRLoading extends StatelessWidget {
+  const QRLoading({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: Paddings.maincontent,
+      child: Shimmer.fromColors(
+          baseColor: Theme.of(context).splashColor,
+          highlightColor: Theme.of(context).highlightColor,
+          enabled: true,
+          child: const SingleChildScrollView(
+            physics: NeverScrollableScrollPhysics(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: 85.7 - Paddings.horizontal, vertical: 246.7),
+                  child: BannerPlaceholder(
+                    height: 266,
+                    width: 240,
+                  ),
+                ),
+              ],
+            ),
+          )),
+    );
+  }
+}
+
+class BookingLoading extends StatelessWidget {
+  const BookingLoading({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: Paddings.maincontent,
+      child: Shimmer.fromColors(
+          baseColor: Theme.of(context).splashColor,
+          highlightColor: Theme.of(context).highlightColor,
+          enabled: true,
+          child: const SingleChildScrollView(
+            physics: NeverScrollableScrollPhysics(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(top: 12),
+                  child: BannerPlaceholder(
+                    height: 160,
+                    width: double.infinity,
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 0),
+                  child: BannerPlaceholder(
+                    height: 160,
+                    width: double.infinity,
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 0),
+                  child: BannerPlaceholder(
+                    height: 160,
+                    width: double.infinity,
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 0),
+                  child: BannerPlaceholder(
+                    height: 160,
                     width: double.infinity,
                   ),
                 ),

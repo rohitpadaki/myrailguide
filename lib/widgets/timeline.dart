@@ -22,7 +22,7 @@ class Timeline extends StatelessWidget {
         isLast: islast,
         endChild: EndCard(
             str: "${payload['station']} - ${payload['sid']}",
-            time: payload['time']),
+            time: payload['arrivalTime']),
       ),
     );
   }

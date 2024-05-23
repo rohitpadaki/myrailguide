@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:myrailguide/auth.dart';
 import 'package:myrailguide/padding.dart';
 import 'package:myrailguide/widgets/customappbar.dart';
 import 'package:myrailguide/widgets/custombutton.dart';
 import 'package:quickalert/quickalert.dart';
-
-FirebaseFirestore firestore = FirebaseFirestore.instance;
+import 'package:mongo_dart/mongo_dart.dart' as mongo;
 
 class FeedbackComp extends StatefulWidget {
   const FeedbackComp({super.key});
@@ -19,8 +18,11 @@ class _FeedbackCompState extends State<FeedbackComp> {
   @override
   Widget build(BuildContext context) {
     TextEditingController fbcontroller = TextEditingController();
-    Future<void> submitFeedback(fbcoll, fbstring) {
-      return fbcoll.add({'feedback': fbstring});
+
+    Future<void> submitFeedback(fbstring) async {
+      var db = await mongo.Db.create(Environment.mongoServerUrl);
+      await db.open();
+      db.collection('feedback').insert({"feedback": fbstring});
     }
 
     return Scaffold(
@@ -67,10 +69,8 @@ class _FeedbackCompState extends State<FeedbackComp> {
                   padding: const EdgeInsets.symmetric(vertical: 7.0),
                   child: PrimaryButton(
                     onTap: () {
-                      CollectionReference fbcoll =
-                          firestore.collection('feedback');
                       if (fbcontroller.text.trim() != '') {
-                        submitFeedback(fbcoll, fbcontroller.text);
+                        submitFeedback(fbcontroller.text);
                         QuickAlert.show(
                           context: context,
                           type: QuickAlertType.success,
