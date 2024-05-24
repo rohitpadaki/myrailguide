@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:myrailguide/padding.dart';
 import 'package:myrailguide/pnrstatus/pnrresult.dart';
@@ -5,7 +6,8 @@ import 'package:myrailguide/widgets/customappbar.dart';
 import 'package:myrailguide/widgets/custombutton.dart';
 
 class PNRStatus extends StatefulWidget {
-  const PNRStatus({super.key});
+  final User? user;
+  const PNRStatus({super.key, this.user});
 
   @override
   State<PNRStatus> createState() => _PNRStatusState();
@@ -49,6 +51,7 @@ class _PNRStatusState extends State<PNRStatus> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => PNRResult(
+                                  user: widget.user,
                                   pnrno: pnrcontroller.text,
                                 )),
                       );

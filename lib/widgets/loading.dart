@@ -256,3 +256,93 @@ class BookingLoading extends StatelessWidget {
     );
   }
 }
+
+class JourneyLoading extends StatelessWidget {
+  const JourneyLoading({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: Paddings.maincontent,
+      child: Shimmer.fromColors(
+          baseColor: Theme.of(context).splashColor,
+          highlightColor: Theme.of(context).highlightColor,
+          enabled: true,
+          child: const SingleChildScrollView(
+            physics: NeverScrollableScrollPhysics(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(top: 12),
+                  child: BannerPlaceholder(
+                    height: 226,
+                    width: double.infinity,
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 0),
+                  child: BannerPlaceholder(
+                    height: 226,
+                    width: double.infinity,
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 0),
+                  child: BannerPlaceholder(
+                    height: 226,
+                    width: double.infinity,
+                  ),
+                ),
+              ],
+            ),
+          )),
+    );
+  }
+}
+
+class NotifLoading extends StatelessWidget {
+  const NotifLoading({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: Paddings.maincontent,
+      child: Shimmer.fromColors(
+          baseColor: Theme.of(context).splashColor,
+          highlightColor: Theme.of(context).highlightColor,
+          enabled: true,
+          child: const SingleChildScrollView(
+            physics: NeverScrollableScrollPhysics(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(top: 8),
+                  child: BannerPlaceholder(
+                    height: 40,
+                    width: double.infinity,
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 8),
+                  child: BannerPlaceholder(
+                    height: 40,
+                    width: double.infinity,
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 8),
+                  child: BannerPlaceholder(
+                    height: 40,
+                    width: double.infinity,
+                  ),
+                ),
+              ],
+            ),
+          )),
+    );
+  }
+}

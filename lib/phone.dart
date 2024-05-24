@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:myrailguide/otp.dart';
 import 'package:myrailguide/padding.dart';
 import 'package:myrailguide/widgets/custombutton.dart';
+import 'package:myrailguide/widgets/customdialog.dart';
 import 'package:quickalert/quickalert.dart';
 
 class Myphone extends StatefulWidget {
@@ -132,6 +133,12 @@ class _MyphoneState extends State<Myphone> {
                           showConfirmBtn: false,
                         );
                       } else {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return CustomCircularProgressIndicator(
+                                  info: "Verifying Captcha...");
+                            });
                         await FirebaseAuth.instance.verifyPhoneNumber(
                           phoneNumber: countrycode.text + phone.text,
                           verificationCompleted:
@@ -140,6 +147,7 @@ class _MyphoneState extends State<Myphone> {
                           codeSent: (String verificationId, int? resendToken) {
                             Myphone.verify = verificationId;
                             String ph = phone.text.toString();
+                            Navigator.pop(context);
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(

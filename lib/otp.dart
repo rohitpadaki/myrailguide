@@ -1,12 +1,17 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:localstore/localstore.dart';
+import 'package:myrailguide/auth.dart';
 import 'package:myrailguide/home/nav.dart';
 import 'package:myrailguide/widgets/custombutton.dart';
+import 'package:myrailguide/widgets/customdialog.dart';
 import 'package:pinput/pinput.dart';
 import 'package:quickalert/quickalert.dart';
 import 'phone.dart';
+import 'package:mongo_dart/mongo_dart.dart' as mongo;
 
 class Myotp extends StatefulWidget {
   final String phno;
@@ -18,11 +23,46 @@ class Myotp extends StatefulWidget {
 
 class _MyotpState extends State<Myotp> {
   final FirebaseAuth auth = FirebaseAuth.instance;
-  void showAlert(
+
+  Future<void> addToken(user) async {
+    Localstore.instance.collection(user!.uid).delete();
+    var db = await mongo.Db.create(Environment.mongoServerUrl);
+    await db.open();
+    String? token = await FirebaseMessaging.instance.getToken();
+    var tokenResult =
+        await db.collection('token').findOne(mongo.where.eq('user', user.uid));
+    if (tokenResult == null) {
+      await db.collection('token').insert({
+        "user": user.uid,
+        "token": token ?? "",
+        "status_pnr": true,
+        "status_train": true,
+        "pnr": [],
+        "train": []
+      });
+    } else {
+      print("Updated Token");
+      tokenResult['token'] = token;
+      tokenResult['pnr'] = [];
+      tokenResult['train'] = [];
+      await db
+          .collection('token')
+          .replaceOne(mongo.where.eq('user', user.uid), tokenResult);
+    }
+  }
+
+  Future<void> showAlert(
+    context,
     String tex,
     QuickAlertType quickAlertType,
-  ) {
-    QuickAlert.show(context: context, type: quickAlertType, text: tex);
+  ) async {
+    QuickAlert.show(
+      context: context,
+      type: QuickAlertType.success,
+      title: "Logged In!",
+      autoCloseDuration: const Duration(milliseconds: 2800),
+      showConfirmBtn: false,
+    );
   }
 
   @override
@@ -117,20 +157,18 @@ class _MyotpState extends State<Myotp> {
                     text: "SUBMIT",
                     onTap: () async {
                       try {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return CustomCircularProgressIndicator(
+                                  info: "Verifying OTP...");
+                            });
                         PhoneAuthCredential credential =
                             PhoneAuthProvider.credential(
                                 verificationId: Myphone.verify, smsCode: code);
                         UserCredential usercred =
                             await auth.signInWithCredential(credential);
-                        QuickAlert.show(
-                          context: context,
-                          type: QuickAlertType.success,
-                          title: "Logged In!",
-                          autoCloseDuration: const Duration(milliseconds: 2800),
-                          showConfirmBtn: false,
-                        );
-                        //showAlert("Succesful!!",QuickAlertType.success);
-
+                        await addToken(usercred.user);
                         if (Navigator.canPop(context)) {
                           Navigator.popUntil(context, ModalRoute.withName('/'));
                         }
@@ -152,13 +190,15 @@ class _MyotpState extends State<Myotp> {
                           );
                         }
                       } catch (e) {
+                        Navigator.pop(context);
                         if (code == "") {
-                          showAlert("Enter the OTP!!", QuickAlertType.error);
-                        } else if (code.length != 6) {
                           showAlert(
-                              "Enter 6 digit Otp!!", QuickAlertType.error);
+                              context, "Enter the OTP!!", QuickAlertType.error);
+                        } else if (code.length != 6) {
+                          showAlert(context, "Enter 6 digit Otp!!",
+                              QuickAlertType.error);
                         } else {
-                          showAlert("Wrong OTP", QuickAlertType.error);
+                          showAlert(context, "Wrong OTP", QuickAlertType.error);
                         }
                       }
                     }),

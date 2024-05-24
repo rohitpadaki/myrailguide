@@ -173,8 +173,9 @@ class _HomePageState extends State<HomePage> {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const PNRStatus()),
+                                              builder: (context) => PNRStatus(
+                                                    user: widget.user,
+                                                  )),
                                         );
                                       },
                                     ),
@@ -263,7 +264,9 @@ class _HomePageState extends State<HomePage> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  const NotificationPage1()),
+                                                  NotificationPage1(
+                                                    user: widget.user,
+                                                  )),
                                         );
                                       },
                                     ),

@@ -1,23 +1,28 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:localstore/localstore.dart';
+import 'package:myrailguide/auth.dart';
 import 'package:myrailguide/padding.dart';
 import 'package:myrailguide/pnrstatus/pnrresult.dart';
 import 'package:myrailguide/widgets/customappbar.dart';
 import 'package:myrailguide/widgets/custombutton.dart';
+import 'package:myrailguide/widgets/loading.dart';
 import 'package:quickalert/quickalert.dart';
+import 'package:mongo_dart/mongo_dart.dart' as mongo;
 
 class JourneyPlanner extends StatefulWidget {
   final User? user;
   final bool? backbutton;
-  const JourneyPlanner({super.key, this.user, this.backbutton});
+  final String? sentPnr;
+  final String? sentTrain;
+  const JourneyPlanner(
+      {super.key, this.user, this.backbutton, this.sentPnr, this.sentTrain});
   @override
   State<JourneyPlanner> createState() => _JourneyPlannerState();
 }
 
 class _JourneyPlannerState extends State<JourneyPlanner> {
-  late CollectionReference collectionReference;
+  int status = 0;
   var flag = 0;
   List<DynamicWidget> listDynamic = [];
   // addDynamic() {
@@ -37,14 +42,17 @@ class _JourneyPlannerState extends State<JourneyPlanner> {
             callback: updateState,
             user: widget.user,
             pnr: data['pnrno'],
-            train: data['train']['train'],
-            to: data['dst']['station'],
-            from: data['src']['station'],
+            trainno: data['trainno'],
+            train: data['train_name'],
+            to: data['destination']['sid'],
+            from: data['source']['sid'],
           );
           listDynamic.add(dynamicWidget);
         });
       }
-      setState(() {});
+      setState(() {
+        status = 1;
+      });
     });
     // Localstore.instance.collection(widget.user!.uid).delete();
   }
@@ -59,10 +67,14 @@ class _JourneyPlannerState extends State<JourneyPlanner> {
   @override
   void initState() {
     super.initState();
+    if (widget.sentPnr != null) {
+      submit(widget.sentPnr);
+    }
     fetchLocalStoreData();
   }
 
   static String pnrno = "";
+
   TextEditingController pnr = TextEditingController();
   Future openDialog() async {
     showDialog(
@@ -94,7 +106,7 @@ class _JourneyPlannerState extends State<JourneyPlanner> {
                   TextButton(
                       onPressed: () {
                         Navigator.of(context).pop();
-                        submit();
+                        submit(pnrno);
                       },
                       child: const Text(
                         "SUBMIT",
@@ -103,104 +115,76 @@ class _JourneyPlannerState extends State<JourneyPlanner> {
                 ]));
   }
 
-  Future<Map<String, dynamic>?> fetchPNR(String pnr, source) async {
-    try {
-      var db = FirebaseFirestore.instance;
-      DocumentSnapshot<Map<String, dynamic>>? document;
-      try {
-        document =
-            await db.collection('pnr').doc(pnr).get(GetOptions(source: source));
-      } on Exception {
-        document = await db
-            .collection('pnr')
-            .doc(pnr)
-            .get(const GetOptions(source: Source.server));
-      }
-      List<Map<String, dynamic>> passengers =
-          List<Map<String, dynamic>>.from(document['passengers']);
-      String chart = document['chart'];
-      String pClass = document['class'];
-      String remarks = document['remarks'];
-      int fare = document['fare'];
-
-      Timestamp depart = document['depart'];
-      DateTime departTime = depart.toDate();
-      String depTime =
-          '${departTime.hour.toString().padLeft(2, '0')}:${departTime.minute.toString().padLeft(2, '0')}';
-      String depDate =
-          '${departTime.day.toString().padLeft(2, '0')}-${departTime.month.toString().padLeft(2, '0')}-${departTime.year}';
-
-      Timestamp arrive = document['arrive'];
-
-      DateTime arriveTime = arrive.toDate();
-      String arrTime =
-          '${arriveTime.hour.toString().padLeft(2, '0')}:${arriveTime.minute.toString().padLeft(2, '0')}';
-      String arrDate =
-          '${arriveTime.day.toString().padLeft(2, '0')}-${arriveTime.month.toString().padLeft(2, '0')}-${arriveTime.year}';
-
-      DocumentReference<Map<String, dynamic>> fromRef = document['src'];
-      DocumentReference<Map<String, dynamic>> toRef = document['dst'];
-      DocumentReference<Map<String, dynamic>> train = document['train'];
-
-      DocumentSnapshot<Map<String, dynamic>> fromSnapshot = await fromRef.get();
-      Map<String, dynamic> fromData = fromSnapshot.data()!;
-
-      DocumentSnapshot<Map<String, dynamic>> toSnapshot = await toRef.get();
-      Map<String, dynamic> toData = toSnapshot.data()!;
-
-      DocumentSnapshot<Map<String, dynamic>> trainSnapshot = await train.get();
-      Map<String, dynamic> trainData = trainSnapshot.data()!;
-      Map<String, dynamic> reqTrain = {
-        "train": trainData['trainname'],
-        "trainno": trainData['trainno']
-      };
-      return {
-        'pnrno': pnr,
-        'src': fromData,
-        'dst': toData,
-        'train': reqTrain,
-        'passengers': passengers,
-        'depart': [depDate, depTime],
-        'arrive': [arrDate, arrTime],
-        'chart': chart,
-        'class': pClass,
-        'remarks': remarks,
-        'fare': fare
-      };
-    } catch (e) {
-      return null;
-    }
+  Future<Map<String, dynamic>?> fetchPNR(pnrno) async {
+    var db = await mongo.Db.create(Environment.mongoServerUrl);
+    await db.open();
+    Map<String, dynamic>? pnrResult =
+        await db.collection('pnr').findOne(mongo.where.eq('pnrno', pnrno));
+    return pnrResult;
   }
 
-  void submit() async {
-    if (pnrno == "") {
+  void submit(pnrVal) async {
+    setState(() {
+      status = 0;
+    });
+    if (pnrVal == "") {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("PNR Number can't be empty!"),
+      ));
       // showAlert("Please Enter The PNR Number", QuickAlertType.error);
-    } else if (pnrno.length == 10) {
+    } else if (pnrVal.length != 10) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('PNR Number should be of 10 digits!'),
+      ));
       // flag = 1;
       // Navigator.of(context).pop();
     } else {
-      Map<String, dynamic>? res = await fetchPNR(pnrno, Source.server);
+      Map<String, dynamic>? res = await fetchPNR(pnrVal);
       if (res != null) {
         // Add the new PNR to the local store
         for (var item in listDynamic) {
-          if (item.pnr == pnrno) {
+          if (item.pnr == pnrVal) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text('The PNR number already exists!'),
+            ));
             return;
           }
         }
-        Localstore.instance.collection(widget.user!.uid).doc(pnrno).set(res);
+        Localstore.instance.collection(widget.user!.uid).doc(pnrVal).set(res);
         // Create a new DynamicWidget for the new PNR and add it to listDynamic
         DynamicWidget dynamicWidget = DynamicWidget(
           callback: updateState,
-          pnr: pnrno,
-          train: res['train']['train'],
-          to: res['dst']['station'],
-          from: res['src']['station'],
+          pnr: pnrVal,
+          train: res['train_name'],
+          trainno: res['train_no'],
+          to: res['destination']['sid'],
+          from: res['source']['sid'],
           user: widget.user,
         );
+        var db = await mongo.Db.create(Environment.mongoServerUrl);
+        await db.open();
+        Map<String, dynamic>? userResult = await db
+            .collection('token')
+            .findOne(mongo.where.eq('user', widget.user?.uid));
+        if (userResult != null) {
+          userResult['pnr'].add(pnrVal);
+          userResult['train'].add(res['train_no']);
+
+          await db
+              .collection('token')
+              .replaceOne(mongo.where.eq('user', widget.user?.uid), userResult);
+        }
         setState(() {
           listDynamic.add(dynamicWidget);
         });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Could not find PNR Number!'),
+        ));
       }
+      setState(() {
+        status = 1;
+      });
       // showAlert("PNR Number Consists of 10 Digits", QuickAlertType.error);
     }
   }
@@ -235,87 +219,48 @@ class _JourneyPlannerState extends State<JourneyPlanner> {
                 ),
               ),
         body: SafeArea(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: Paddings.maincontent,
-              child: Column(
-                children: [
-                  const Padding(padding: EdgeInsets.symmetric(vertical: 10)),
-                  // StreamBuilder<QuerySnapshot>(stream: _firebaseFirestore.snapshots(),
-                  //     builder:(BuildContext context,AsyncSnapshot<QuerySnapshot> snapshot){
-                  //       if(!snapshot.hasData){
-                  //         return Center(child: CircularProgressIndicator(),);
-                  //       }
-                  //       else{
-                  //         print(snapshot.data);
-                  //         return ListView(children: [
-                  //           ...snapshot.data!.docs.where(
-                  //               (QueryDocumentSnapshot<Object?> element)=> element['pnrno']
-                  //                   .toString()
-                  //                   .toLowerCase()
-                  //                   .contains(pnrno.toLowerCase())).map((QueryDocumentSnapshot<Object?> data){
-                  //               train_name=data.get('Train_name');
-                  //               dest=data.get('dest');
-                  //               frm=data.get('frm');
-                  //               pnrn=data.get('pnrno');
-                  //               print(train_name);
-                  //               print(dest);
-                  //               print(frm);
-                  //               print(pnrn);
-                  //               return Column(
-                  //                 mainAxisAlignment: MainAxisAlignment.center,
-                  //                 children: listDynamic.map((ex){
-                  //                   return Column(
-                  //                     children: [
-                  //                       ex
-                  //                     ],
-                  //                   );
-                  //                 }).toList(),
-                  //                 // children: <Widget>[
-                  //                 // ListView.builder(
-                  //                 //   shrinkWrap: true,
-                  //                 //     itemCount: listDynamic.length,
-                  //                 //     itemBuilder: (_,index)=> listDynamic[index]),
-                  //
-                  //                 // ],
-                  //               );
-                  //           })
-                  //         ],);
-                  //       }
-                  //     }),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: (listDynamic.isEmpty)
-                        ? [
-                            Padding(
-                              padding: const EdgeInsets.all(30.0),
-                              child: Center(
-                                  child: Text(
-                                "No Journeys Planned!\nTry Adding Journeys",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headlineMedium!
-                                    .copyWith(color: Colors.grey),
-                              )),
-                            )
-                          ]
-                        : listDynamic.map((items) {
-                            return Column(
-                              children: [items],
-                            );
-                          }).toList(),
-                    // children: <Widget>[
-                    // ListView.builder(
-                    //   shrinkWrap: true,
-                    //     itemCount: listDynamic.length,
-                    //     itemBuilder: (_,index)=> listDynamic[index]),
+          child: (status == 1)
+              ? SingleChildScrollView(
+                  child: Padding(
+                    padding: Paddings.maincontent,
+                    child: Column(
+                      children: [
+                        const Padding(
+                            padding: EdgeInsets.symmetric(vertical: 10)),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: (listDynamic.isEmpty)
+                              ? [
+                                  Padding(
+                                    padding: const EdgeInsets.all(30.0),
+                                    child: Center(
+                                        child: Text(
+                                      "No Journeys Planned!\nTry Adding Journeys",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headlineMedium!
+                                          .copyWith(color: Colors.grey),
+                                    )),
+                                  )
+                                ]
+                              : listDynamic.map((items) {
+                                  return Column(
+                                    children: [items],
+                                  );
+                                }).toList(),
+                          // children: <Widget>[
+                          // ListView.builder(
+                          //   shrinkWrap: true,
+                          //     itemCount: listDynamic.length,
+                          //     itemBuilder: (_,index)=> listDynamic[index]),
 
-                    // ],
-                  )
-                ],
-              ),
-            ),
-          ),
+                          // ],
+                        )
+                      ],
+                    ),
+                  ),
+                )
+              : JourneyLoading(),
         ),
       ),
     );
@@ -328,6 +273,7 @@ class DynamicWidget extends StatelessWidget {
   final String from;
   final String to;
   final String train;
+  final String trainno;
   final String pnr;
   const DynamicWidget(
       {super.key,
@@ -336,15 +282,32 @@ class DynamicWidget extends StatelessWidget {
       required this.from,
       required this.to,
       required this.pnr,
-      required this.train});
+      required this.train,
+      required this.trainno});
   @override
   Widget build(BuildContext context) {
+    deleteFromDb() async {
+      var db = await mongo.Db.create(Environment.mongoServerUrl);
+      await db.open();
+      Map<String, dynamic>? userResult = await db
+          .collection('token')
+          .findOne(mongo.where.eq('user', user?.uid));
+      if (userResult != null) {
+        userResult['pnr'].remove(pnr);
+        userResult['train'].remove(trainno);
+        await db
+            .collection('token')
+            .replaceOne(mongo.where.eq('user', user?.uid), userResult);
+      }
+    }
+
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) => PNRResult(
+                    user: user,
                     pnrno: pnr,
                   )),
         );
@@ -377,7 +340,7 @@ class DynamicWidget extends StatelessWidget {
                     style: Theme.of(context).textTheme.headlineSmall),
               ),
               Padding(
-                padding: Paddings.doublepad,
+                padding: Paddings.buttonpad,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -385,7 +348,7 @@ class DynamicWidget extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(from,
-                            style: Theme.of(context).textTheme.headlineSmall)
+                            style: Theme.of(context).textTheme.headlineMedium)
                       ],
                     ),
                     const Icon(
@@ -397,7 +360,7 @@ class DynamicWidget extends StatelessWidget {
                       children: [
                         Text(to,
                             textAlign: TextAlign.right,
-                            style: Theme.of(context).textTheme.headlineSmall)
+                            style: Theme.of(context).textTheme.headlineMedium)
                       ],
                     )
                   ],
@@ -412,6 +375,7 @@ class DynamicWidget extends StatelessWidget {
                           .collection(user!.uid)
                           .doc(pnr)
                           .delete();
+                      deleteFromDb();
                       callback();
                     }),
               )

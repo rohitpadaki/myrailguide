@@ -14,4 +14,7 @@ class Paddings {
 
   static const EdgeInsets doublepad =
       EdgeInsets.symmetric(horizontal: horizontal, vertical: horizontal);
+
+  static const EdgeInsets dialogpad =
+      EdgeInsets.symmetric(horizontal: 35, vertical: 25);
 }

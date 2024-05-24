@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:myrailguide/auth.dart';
 import 'package:myrailguide/padding.dart';
+import 'package:myrailguide/planner/addjourney.dart';
 import 'package:myrailguide/widgets/customappbar.dart';
 import 'package:myrailguide/widgets/custombutton.dart';
 import 'package:myrailguide/widgets/loading.dart';
@@ -10,8 +12,9 @@ import 'package:mongo_dart/mongo_dart.dart' as mongo;
 // import 'package:myrailguide/loading.dart';
 
 class PNRResult extends StatefulWidget {
+  final User? user;
   final String pnrno;
-  const PNRResult({super.key, required this.pnrno});
+  const PNRResult({super.key, required this.pnrno, this.user});
 
   @override
   State<PNRResult> createState() => _PNRResultState();
@@ -60,6 +63,7 @@ class _PNRResultState extends State<PNRResult> {
                   ? const PNRLoading()
                   : status == 1
                       ? PNRResPage(
+                          user: widget.user,
                           res: pnrResult,
                         )
                       : const CantFindPNR()),
@@ -68,8 +72,9 @@ class _PNRResultState extends State<PNRResult> {
 }
 
 class PNRResPage extends StatefulWidget {
+  final User? user;
   final Map<String, dynamic>? res;
-  const PNRResPage({super.key, required this.res});
+  const PNRResPage({super.key, required this.res, this.user});
 
   @override
   State<PNRResPage> createState() => _PNRResPageState();
@@ -325,7 +330,16 @@ class _PNRResPageState extends State<PNRResPage> {
               padding:
                   const EdgeInsets.symmetric(vertical: 15.0, horizontal: 15),
               child: PrimaryButton(
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => JourneyPlanner(
+                              user: widget.user,
+                              sentPnr: widget.res?['pnrno'],
+                            )),
+                  );
+                },
                 text: 'ADD TO JOUNREY PLANNER',
               ),
             ),

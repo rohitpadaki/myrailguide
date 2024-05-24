@@ -90,10 +90,21 @@ class _ProfilePageState extends State<ProfilePage> {
             TextButton(
               onPressed: () async {
                 await FirebaseAuth.instance.signOut();
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => const Myphone()),
-                ); // Close the dialog
+                if (Navigator.canPop(context)) {
+                  Navigator.popUntil(context, ModalRoute.withName('/'));
+                }
+                if (Navigator.canPop(context)) {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const Myphone()),
+                  );
+                } else {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const Myphone()),
+                  );
+                }
+                // Close the dialog
               },
               child: const Text('Yes'),
             ),

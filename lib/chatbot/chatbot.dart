@@ -75,10 +75,13 @@ class _ChatbotState extends State<Chatbot> {
         body: SafeArea(
             child: Column(
           children: [
-            const Text(
-              "May produce incorrect results. Verify with official website",
-              style: TextStyle(
-                  fontFamily: "Urbanist", fontSize: 12, color: Colors.grey),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: const Text(
+                "May produce incorrect results. Verify with official website",
+                style: TextStyle(
+                    fontFamily: "Urbanist", fontSize: 12, color: Colors.grey),
+              ),
             ),
             Expanded(
               child: SingleChildScrollView(
