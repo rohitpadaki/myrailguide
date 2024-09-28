@@ -1,16 +1,18 @@
 # MyRailGuide
 
 <div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
-  <img src="https://github.com/rohitpadaki/myrailguide/tree/master/assets/screenshots/banner.png" width="100%">
+  <img src="https://github.com/rohitpadaki/myrailguide/blob/master/assets/screenshots/banner.png?raw=true" width="100%">
 </div>
 
 **MyRailGuide** is a comprehensive Flutter-based railway journey assistant that provides users with real-time train schedules, PNR details, emergency contacts, and much more. It enhances the travel experience by offering an AI-powered chatbot and voice-based interaction system, ensuring seamless communication and journey planning.
 
-<div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
-  <img src="https://github.com/rohitpadaki/myrailguide/blob/master/assets/screenshots/home.png?raw=true" width="300px">
-</div>
+
 
 ## Features
+
+### Home Screen
+  <img src="https://github.com/rohitpadaki/myrailguide/blob/master/assets/screenshots/home.png?raw=true" width="300px">
+
 
 ### 1. Train Schedule Retrieval
 - Access real-time train schedules including arrival and departure times.
