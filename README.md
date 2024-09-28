@@ -65,7 +65,6 @@ Submit feedback and register complaints to help improve services and address any
 
 ### 10. Real-time Notification System
 - Get real-time notifications for train delays, platform changes, or cancellations.
-- Customize notifications via pop-ups, email, or SMS alerts based on user preferences.
 
   
 ## Latest Release
