@@ -38,11 +38,11 @@ class _NavbarState extends State<Navbar> {
           },
           children: [
             HomePage(user: currentUser),
-            // JourneyPlanner(
-            //   backbutton: false,
-            //   user: currentUser,
-            // ),
-            const Booking(),
+            JourneyPlanner(
+              backbutton: false,
+              user: currentUser,
+            ),
+            // const Booking(),
             ProfilePage(
               user: currentUser,
             ),
