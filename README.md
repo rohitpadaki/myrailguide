@@ -7,7 +7,6 @@
 **MyRailGuide** is a comprehensive Flutter-based railway journey assistant that provides users with real-time train schedules, PNR details, emergency contacts, and much more. It enhances the travel experience by offering an AI-powered chatbot and voice-based interaction system, ensuring seamless communication and journey planning.
 
 
-
 ## Features
 
 ### Home Screen
